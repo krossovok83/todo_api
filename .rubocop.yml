@@ -1,0 +1,42 @@
+Style/StringLiterals:
+  EnforcedStyle: single_quotes
+
+AllCops:
+  NewCops: enable
+  Exclude:
+    - 'bin/*'
+    - 'db/schema.rb'
+    - 'db/migrate/*'
+
+Style/Documentation:
+  Enabled: false
+
+Style/EmptyElse:
+  Enabled: false
+
+Metrics/BlockLength:
+  Exclude:
+    - 'Rakefile'
+    - '/*.rake'
+    - 'test//*.rb'
+    - 'spec/**/*.rb'
+    - 'app/admin/*.rb'
+    - 'db/**/*'
+    - 'config/**/*'
+
+Layout/LineLength:
+  Exclude:
+    - "Gemfile"
+    - "db/seeds/*"
+
+Metrics/MethodLength:
+  Exclude:
+    - 'Rakefile'
+    - '/*.rake'
+    - 'test//*.rb'
+    - 'spec/**/*.rb'
+    - 'app/admin/*.rb'
+    - 'db/**/*'
+Lint/MissingSuper:
+  Exclude:
+    - 'app/services/**/*'
