@@ -40,3 +40,12 @@ Metrics/MethodLength:
 Lint/MissingSuper:
   Exclude:
     - 'app/services/**/*'
+Lint/UnreachableCode:
+  Exclude:
+    - 'app/concepts/**/operation/**/*'
+Style/SignalException:
+  Exclude:
+    - 'app/concepts/**/operation/**/*'
+Style/ClassAndModuleChildren:
+  Exclude:
+    - 'app/concepts/**/*'
