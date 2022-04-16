@@ -11,8 +11,9 @@ module Session::Operation
     end
 
     def write_token(ctx, **)
-      ctx[:token_user] = JsonWebToken.encode(user_id: ctx[:model].id)
+      ctx[:model].token = JsonWebToken.encode(user_id: ctx[:model].id)
       ctx[:time] = Time.now + 24.hours.to_i
+      ctx[:model].save
     end
   end
 end

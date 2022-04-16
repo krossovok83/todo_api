@@ -2,14 +2,15 @@
 
 module Session::Operation
   class Authorization < Trailblazer::Operation
-    step :check_blacklist
+    step :check_token
     fail :unauthorized
     step :decoded
     step :current_user
 
-    def check_blacklist(ctx, **)
+    def check_token(ctx, **)
       @token = ctx[:token]
-      !BlackList.find_by(token: @token).present?
+      @user = User.find_by(token: @token)
+      @user.present?
     end
 
     def decoded(ctx, **)
@@ -23,7 +24,7 @@ module Session::Operation
       ctx[:user] = User.find(@decoded[:user_id])
     rescue ActiveRecord::RecordNotFound => e
       ctx[:errors] = e
-      false if e.present?
+      false if e.present? || @user != ctx[:user]
     end
 
     def unauthorized(ctx, **)

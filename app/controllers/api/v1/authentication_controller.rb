@@ -9,7 +9,7 @@ module Api
         run Session::Operation::Login
         if result.success?
           render json: {
-            token: result[:token_user],
+            token: @model[:token],
             exp: result[:time].strftime('%m-%d-%Y %H:%M'),
             username: @model.email
           }, status: :ok
@@ -19,7 +19,7 @@ module Api
       end
 
       def logout
-        result = Session::Operation::Logout.call(token: request.headers['Authorization'])
+        result = Session::Operation::Logout.call(params: { id: @current_user.id })
         if result.success?
           render json: { message: 'logout successfully' }
         else

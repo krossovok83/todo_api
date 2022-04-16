@@ -2,14 +2,11 @@
 
 module Session::Operation
   class Logout < Trailblazer::Operation
-    step Model(BlackList, :new)
-    step :assign_token
-    step Contract::Build(constant: Session::Contract::Logout)
-    step Contract::Validate()
-    step Contract::Persist()
+    step Model(User, :find_by)
+    step :remove_token
 
-    def assign_token(ctx, **)
-      ctx[:model].token = ctx[:token]
+    def remove_token(ctx, **)
+      ctx[:model].update(token: nil)
     end
   end
 end
