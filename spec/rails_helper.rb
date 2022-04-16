@@ -2,6 +2,9 @@
 
 # This file is copied to spec/ when you run 'rails generate rspec:install'
 require 'spec_helper'
+require 'active_support/isolated_execution_state'
+require 'dox'
+require 'json_matchers'
 ENV['RAILS_ENV'] ||= 'test'
 require_relative '../config/environment'
 # Prevent database truncation if the environment is production
@@ -45,7 +48,7 @@ RSpec.configure do |config|
   # config.use_active_record = false
 
   # RSpec Rails can automatically mix in different behaviours to your tests
-  # based on their file location, for example enabling you to call `get` and
+  # based on their file location, for config enabling you to call `get` and
   # `post` in specs under `spec/controllers`.
   #
   # You can disable this behaviour by removing the line below, and instead
@@ -63,4 +66,23 @@ RSpec.configure do |config|
   config.filter_rails_from_backtrace!
   # arbitrary gems may also be filtered via:
   # config.filter_gems_from_backtrace("gem name")
+  config.after(:each, :dox) do |config|
+    config.metadata[:request] = request
+    config.metadata[:response] = response
+  end
+end
+
+Dir[Rails.root.join('spec/docs/**/*.rb')].each { |file| require file }
+
+Dox.configure do |config|
+  config.header_description = 'header.md'
+  config.descriptions_location = Rails.root.join('spec/docs/v1/descriptions')
+  config.headers_whitelist = %w[Accept X-Auth-Token]
+end
+
+Shoulda::Matchers.configure do |config|
+  config.integrate do |with|
+    with.test_framework :rspec
+    with.library :rails
+  end
 end

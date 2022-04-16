@@ -1,0 +1,184 @@
+{
+  "openapi": "3.0.0",
+  "info": {
+    "title": "API Documentation",
+    "description": "ToDo list\n",
+    "version": "1.0"
+  },
+  "paths": {
+    "/api/v1/users": {
+      "post": {
+        "summary": "Create User",
+        "tags": [
+          "Users"
+        ],
+        "description": "",
+        "parameters": [
+          {
+            "name": "Accept",
+            "in": "header",
+            "example": "text/xml,application/xml,application/xhtml+xml,text/html;q=0.9,text/plain;q=0.8,image/png,*/*;q=0.5"
+          },
+          {
+            "name": "Content-Type",
+            "in": "header",
+            "example": "application/x-www-form-urlencoded"
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "text/xml,application/xml,application/xhtml+xml,text/html;q=0.9,text/plain;q=0.8,image/png,*/*;q=0.5": {
+              "examples": {
+                "create user": {
+                  "summary": "create user",
+                  "value": "email=examle%40example.com&password=password&password_confirmation=password"
+                },
+                "email is blank": {
+                  "summary": "email is blank",
+                  "value": "password=password&password_confirmation=password"
+                },
+                "email short": {
+                  "summary": "email short",
+                  "value": "email=e%40&password=password&password_confirmation=password"
+                },
+                "email long": {
+                  "summary": "email long",
+                  "value": "email=qqqqqqqqqqqqqqqqqqq%40wwwwwwwwwweeeeeeeeeerrrrrrrrrrtttttttttt&password=password&password_confirmation=password"
+                },
+                "without confirmation": {
+                  "summary": "without confirmation",
+                  "value": "email=examle1%40example.com&password=password"
+                },
+                "not unique mail": {
+                  "summary": "not unique mail",
+                  "value": "email=examle%40example.com&password=password&password_confirmation=password"
+                },
+                "without password": {
+                  "summary": "without password",
+                  "value": "email=examle%40example.com&password_confirmation=password"
+                },
+                "password length not 8 chars": {
+                  "summary": "password length not 8 chars",
+                  "value": "email=examle%40example.com&password=pass&password_confirmation=pass"
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Created",
+            "content": {
+              "application/json; charset=utf-8": {
+                "examples": {
+                  "create user": {
+                    "summary": "create user",
+                    "value": {
+                      "id": 106,
+                      "email": "examle@example.com",
+                      "password_digest": "$2a$04$CZ9ZA6HqrNRV/yp69sF0eeEBbLdRXUMziPd9eJGic.1BwxuAmXMAa",
+                      "created_at": "2022-04-16T11:33:56.672Z",
+                      "updated_at": "2022-04-16T11:33:56.672Z"
+                    }
+                  }
+                }
+              }
+            },
+            "headers": {
+              "Content-Type": {
+                "description": "application/json; charset=utf-8"
+              }
+            }
+          },
+          "422": {
+            "description": "Unprocessable Entity",
+            "content": {
+              "application/json; charset=utf-8": {
+                "examples": {
+                  "email is blank": {
+                    "summary": "email is blank",
+                    "value": {
+                      "errors": [
+                        "Email can't be blank",
+                        "Email is too short (minimum is 3 characters)"
+                      ]
+                    }
+                  },
+                  "email short": {
+                    "summary": "email short",
+                    "value": {
+                      "errors": [
+                        "Email is too short (minimum is 3 characters)"
+                      ]
+                    }
+                  },
+                  "email long": {
+                    "summary": "email long",
+                    "value": {
+                      "errors": [
+                        "Email is too long (maximum is 50 characters)"
+                      ]
+                    }
+                  },
+                  "without confirmation": {
+                    "summary": "without confirmation",
+                    "value": {
+                      "errors": [
+                        "Password Password mismatch"
+                      ]
+                    }
+                  },
+                  "not unique mail": {
+                    "summary": "not unique mail",
+                    "value": {
+                      "errors": [
+                        "Email has already been taken"
+                      ]
+                    }
+                  },
+                  "without password": {
+                    "summary": "without password",
+                    "value": {
+                      "errors": [
+                        "Password is the wrong length (should be 8 characters)",
+                        "Password is invalid",
+                        "Password Password mismatch"
+                      ]
+                    }
+                  },
+                  "password length not 8 chars": {
+                    "summary": "password length not 8 chars",
+                    "value": {
+                      "errors": [
+                        "Password is the wrong length (should be 8 characters)"
+                      ]
+                    }
+                  }
+                }
+              }
+            },
+            "headers": {
+              "Content-Type": {
+                "description": "application/json; charset=utf-8"
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "tags": [
+    {
+      "name": "Users",
+      "description": ""
+    }
+  ],
+  "x-tagGroups": [
+    {
+      "name": "Users",
+      "tags": [
+        "Users"
+      ]
+    }
+  ]
+}

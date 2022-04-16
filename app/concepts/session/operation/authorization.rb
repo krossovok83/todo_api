@@ -12,7 +12,7 @@ module Session::Operation
       !BlackList.find_by(token: @token).present?
     end
 
-    def decoded(*_args)
+    def decoded(ctx, **)
       @decoded = JsonWebToken.decode(@token)
     rescue JWT::DecodeError => e
       ctx[:errors] = e
@@ -27,9 +27,7 @@ module Session::Operation
     end
 
     def unauthorized(ctx, **)
-      raise Exceptions::NotAuthorized, 'Not Authorized'
-    rescue Exceptions::NotAuthorized => e
-      ctx[:errors] = e
+      ctx[:errors] = Exceptions::NotAuthorized.new
     end
   end
 end
