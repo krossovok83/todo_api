@@ -50,3 +50,6 @@ Style/SignalException:
 Style/ClassAndModuleChildren:
   Exclude:
     - 'app/concepts/**/*'
+Lint/ShadowedArgument:
+  Exclude:
+    - 'app/lib/exceptions.rb'

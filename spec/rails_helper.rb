@@ -66,9 +66,9 @@ RSpec.configure do |config|
   config.filter_rails_from_backtrace!
   # arbitrary gems may also be filtered via:
   # config.filter_gems_from_backtrace("gem name")
-  config.after(:each, :dox) do |config|
-    config.metadata[:request] = request
-    config.metadata[:response] = response
+  config.after(:each, :dox) do |conf|
+    conf.metadata[:request] = request
+    conf.metadata[:response] = response
   end
 end
 

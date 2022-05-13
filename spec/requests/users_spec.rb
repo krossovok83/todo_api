@@ -24,7 +24,7 @@ RSpec.describe Api::V1::UsersController, type: :request do
     it 'email short', :dox do
       post '/api/v1/users', params: { email: 'e@',
                                       password: 'password',
-                                      password_confirmation: 'password'}
+                                      password_confirmation: 'password' }
       expect(response.body).to include('Email is too short (minimum is 3 characters)')
       expect(response).to have_http_status :unprocessable_entity
     end
@@ -32,7 +32,7 @@ RSpec.describe Api::V1::UsersController, type: :request do
     it 'email long', :dox do
       post '/api/v1/users', params: { email: 'qqqqqqqqqqqqqqqqqqq@wwwwwwwwwweeeeeeeeeerrrrrrrrrrtttttttttt',
                                       password: 'password',
-                                      password_confirmation: 'password'}
+                                      password_confirmation: 'password' }
       expect(response.body).to include('Email is too long (maximum is 50 characters)')
       expect(response).to have_http_status :unprocessable_entity
     end
@@ -50,7 +50,7 @@ RSpec.describe Api::V1::UsersController, type: :request do
                                       password_confirmation: 'password' }
       post '/api/v1/users', params: { email: 'examle@example.com',
                                       password: 'password',
-                                      password_confirmation: 'password'}
+                                      password_confirmation: 'password' }
       expect(response.body).to include('Email has already been taken')
       expect(response).to have_http_status :unprocessable_entity
     end
@@ -62,10 +62,10 @@ RSpec.describe Api::V1::UsersController, type: :request do
       expect(response).to have_http_status :unprocessable_entity
     end
 
-    it 'password length not 8 chars', :dox do ||
+    it 'password length not 8 chars', :dox do
       post '/api/v1/users', params: { email: 'examle@example.com',
                                       password: 'pass',
-                                      password_confirmation: 'pass'}
+                                      password_confirmation: 'pass' }
       expect(response.body).to include('Password is the wrong length (should be 8 characters)')
       expect(response).to have_http_status :unprocessable_entity
     end
