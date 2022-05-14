@@ -13,4 +13,12 @@ class ApplicationController < ActionController::API
       render json: { errors: result[:errors].message }, status: :unauthorized
     end
   end
+
+  private
+
+  def _run_options(options)
+    options.merge(
+      current_user: @current_user
+    )
+  end
 end

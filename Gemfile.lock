@@ -247,6 +247,7 @@ GEM
       hirb
       trailblazer-activity (>= 0.12.2, < 1.0.0)
       trailblazer-activity-dsl-linear (>= 0.4.1, < 1.0.0)
+    trailblazer-loader (0.1.2)
     trailblazer-macro (2.1.9)
       trailblazer-activity-dsl-linear (>= 0.5.0, < 0.6.0)
       trailblazer-operation (>= 0.7.0)
@@ -291,6 +292,7 @@ DEPENDENCIES
   rexml (~> 3.2.5)
   rspec-rails
   shoulda-matchers (~> 5.1.0)
+  trailblazer-loader (~> 0.1.2)
   trailblazer-rails (~> 2.4.0)
   tzinfo-data
 
