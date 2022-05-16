@@ -66,6 +66,8 @@ GEM
       i18n (>= 1.6, < 2)
       minitest (>= 5.1)
       tzinfo (~> 2.0)
+    acts_as_list (1.0.4)
+      activerecord (>= 4.2)
     bcrypt (3.1.17)
     bootsnap (1.11.1)
       msgpack (~> 1.2)
@@ -120,6 +122,7 @@ GEM
     factory_bot_rails (6.2.0)
       factory_bot (~> 6.2.0)
       railties (>= 5.0.0)
+    ffaker (2.21.0)
     globalid (1.0.0)
       activesupport (>= 5.0)
     hashie (5.0.0)
@@ -274,11 +277,13 @@ PLATFORMS
   x86_64-darwin-19
 
 DEPENDENCIES
+  acts_as_list (~> 1.0.4)
   bcrypt (~> 3.1.17)
   bootsnap
   dox
   dry-validation (~> 1.8.0)
   factory_bot_rails (~> 6.2.0)
+  ffaker (~> 2.21.0)
   json_matchers (~> 0.11.1)
   jsonapi-serializer (~> 2.2.0)
   jwt (~> 2.3.0)

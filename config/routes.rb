@@ -6,7 +6,9 @@ Rails.application.routes.draw do
       resources :users, param: :_username, only: :create
       post '/auth/login', to: 'authentication#login'
       delete '/auth/logout', to: 'authentication#logout'
-      resources :projects
+      resources :projects do
+        resources :tasks, except: [:show, :index]
+      end
     end
   end
   get '/*a', to: 'application#not_found'

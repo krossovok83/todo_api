@@ -1,8 +1,8 @@
 # frozen_string_literal: true
 
-module Project::Operation
+module Task::Operation
   class Delete < Trailblazer::Operation
-    step Subprocess(::Project::Operation::Show)
+    step Subprocess(::Task::Operation::Update::FindTask)
     step :delete
 
     def delete(ctx, **)
