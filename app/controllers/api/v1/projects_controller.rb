@@ -30,7 +30,7 @@ module Api
       end
 
       def destroy
-        run Project::Operation::Delete do
+        run Project::Operation::Destroy do
           render json: { message: 'Project destroy successfully' }
         end
       end

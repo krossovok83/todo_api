@@ -7,7 +7,9 @@ Rails.application.routes.draw do
       post '/auth/login', to: 'authentication#login'
       delete '/auth/logout', to: 'authentication#logout'
       resources :projects do
-        resources :tasks, except: [:show, :index]
+        resources :tasks, except: %i[show index] do
+          resources :comments, only: %i[create destroy]
+        end
       end
     end
   end

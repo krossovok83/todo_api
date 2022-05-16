@@ -17,6 +17,7 @@ gem 'rack-cors', '~> 1.1.1'
 gem 'rails', '~> 7.0.2', '>= 7.0.2.3'
 gem 'reform', '~> 2.6.1'
 gem 'reform-rails', '~> 0.2.3'
+gem 'shrine', '~> 3.4.0'
 gem 'trailblazer-loader', '~> 0.1.2'
 gem 'trailblazer-rails', '~> 2.4.0'
 gem 'tzinfo-data', platforms: %i[mingw mswin x64_mingw jruby]

@@ -20,7 +20,7 @@ module Api
       end
 
       def destroy
-        run Task::Operation::Delete do
+        run Task::Operation::Destroy do
           render json: { message: 'Task destroy successfully' }
         end
       end

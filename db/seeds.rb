@@ -20,3 +20,12 @@ Project.all.each do |project|
     )
   end
 end
+
+Task.all.each do |task|
+  3.times do
+    Comment.create!(
+      body: ::FFaker::Lorem.phrase,
+      task: task
+    )
+  end
+end
