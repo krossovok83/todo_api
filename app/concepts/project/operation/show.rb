@@ -2,11 +2,8 @@
 
 module Project::Operation
   class Show < Trailblazer::Operation
-    step :find_project
+    step Model(Project, :find_by)
     step Contract::Build(constant: Project::Contract::Create)
-
-    def find_project(ctx, **)
-      ctx[:model] = ctx[:current_user].projects.find(ctx[:params][:id])
-    end
+    step Policy::Guard(::Project::Policy::Guard.new)
   end
 end

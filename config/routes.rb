@@ -3,11 +3,13 @@
 Rails.application.routes.draw do
   namespace :api do
     namespace :v1 do
-      resources :users, param: :_username, only: :create
+      resources :users, only: :create
       post '/auth/login', to: 'authentication#login'
       delete '/auth/logout', to: 'authentication#logout'
       resources :projects do
-        resources :tasks, except: [:show, :index]
+        resources :tasks, except: :index do
+          resources :comments, only: %i[create destroy]
+        end
       end
     end
   end
