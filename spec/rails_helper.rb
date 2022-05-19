@@ -75,6 +75,8 @@ end
 Dir[Rails.root.join('spec/docs/**/*.rb')].each { |file| require file }
 
 Dox.configure do |config|
+  config.api_version = '1.0'
+  config.title = 'API ToDo'
   config.header_description = 'header.md'
   config.descriptions_location = Rails.root.join('spec/docs/v1/descriptions')
   config.headers_whitelist = %w[Accept X-Auth-Token]

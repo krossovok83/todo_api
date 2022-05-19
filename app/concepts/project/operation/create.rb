@@ -9,7 +9,7 @@ module Project::Operation
     step Contract::Persist()
 
     def user_define(ctx, **)
-      ctx[:model].user = ctx[:user]
+      ctx[:model].user = ctx[:current_user]
     end
   end
 end

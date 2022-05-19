@@ -5,7 +5,7 @@ module Project::Operation
     step :find_all
 
     def find_all(ctx, **)
-      ctx[:model] = ctx[:user].projects
+      ctx[:model] = ctx[:current_user].projects
     end
   end
 end

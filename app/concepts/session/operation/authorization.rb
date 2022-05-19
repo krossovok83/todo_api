@@ -8,7 +8,9 @@ module Session::Operation
     step :current_user
 
     def check_token(ctx, **)
-      @token = ctx[:token]
+      return false unless ctx[:token]
+
+      @token = ctx[:token].split[1]
       @user = User.find_by(token: @token)
       @user.present?
     end
@@ -21,10 +23,10 @@ module Session::Operation
     end
 
     def current_user(ctx, **)
-      ctx[:user] = User.find(@decoded[:user_id])
+      ctx[:current_user] = User.find(@decoded[:user_id])
     rescue ActiveRecord::RecordNotFound => e
       ctx[:errors] = e
-      false if e.present? || @user != ctx[:user]
+      false if e.present? || @user != ctx[:current_user]
     end
 
     def unauthorized(ctx, **)

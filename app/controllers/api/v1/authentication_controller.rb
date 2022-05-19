@@ -19,7 +19,7 @@ module Api
       end
 
       def logout
-        result = Session::Operation::Logout.call(params: { id: @current_user.id })
+        result = Session::Operation::Logout.call(params: { id: current_user.id })
         if result.success?
           render json: { message: 'logout successfully' }
         else
