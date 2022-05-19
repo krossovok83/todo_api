@@ -1,6 +1,8 @@
 # frozen_string_literal: true
 
 require 'active_support/core_ext/integer/time'
+require 'shrine'
+require 'shrine/storage/file_system'
 
 Rails.application.configure do
   # Settings specified here will take precedence over those in config/application.rb.
@@ -33,12 +35,12 @@ Rails.application.configure do
   end
 
   # Store uploaded files on the local file system (see config/storage.yml for options).
-  config.active_storage.service = :local
+  # config.active_storage.service = :local
 
   # Don't care if the mailer can't send.
-  config.action_mailer.raise_delivery_errors = false
+  # config.action_mailer.raise_delivery_errors = false
 
-  config.action_mailer.perform_caching = false
+  # config.action_mailer.perform_caching = false
 
   # Print deprecation notices to the Rails logger.
   config.active_support.deprecation = :log
@@ -64,3 +66,8 @@ Rails.application.configure do
   # Uncomment if you wish to allow Action Cable access from any origin.
   # config.action_cable.disable_request_forgery_protection = true
 end
+
+Shrine.storages = {
+  cache: Shrine::Storage::FileSystem.new('public', prefix: 'uploads/cache'),
+  store: Shrine::Storage::FileSystem.new('public', prefix: 'uploads')
+}

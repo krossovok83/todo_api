@@ -1,7 +1,5 @@
 # frozen_string_literal: true
 
-require 'reform/form/validation/unique_validator'
-
 module User::Contract
   class Create < Reform::Form
     property :email
