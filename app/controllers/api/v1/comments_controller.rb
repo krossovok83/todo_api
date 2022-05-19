@@ -7,15 +7,16 @@ module Api
 
       def create
         run Comment::Operation::Create do
-          render(json: @model.task, status: :created) and return
+          render(json: CommentSerializer.new(@model).serializable_hash.to_json, status: :created) and return
         end
-        render json: { errors: @form.errors.full_messages }, status: :unprocessable_entity
+        render json: { errors: @form.errors.full_messages }, status: result[:status]
       end
 
       def destroy
         run Comment::Operation::Destroy do
-          render json: { message: 'Comment destroy successfully' }
+          return head :no_content
         end
+        head :not_found
       end
     end
   end

@@ -12,20 +12,20 @@ User.create!(
   )
 end
 
-Project.all.each do |project|
+Project.all.each do |item|
   5.times do
     Task.create!(
       title: ::FFaker::Company.catch_phrase,
-      project: project
+      project: item
     )
   end
 end
 
-Task.all.each do |task|
+Task.all.each do |item|
   3.times do
     Comment.create!(
       body: ::FFaker::Lorem.phrase,
-      task: task
+      task: item
     )
   end
 end

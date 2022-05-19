@@ -6,8 +6,9 @@ module Api
       before_action :authorize
 
       def index
-        run Project::Operation::Index
-        render json: @model, status: :ok
+        run Project::Operation::Index do
+          render json: @model
+        end
       end
 
       def create
@@ -18,8 +19,9 @@ module Api
       end
 
       def show
-        run Project::Operation::Show
-        render json: @model, status: :ok
+        run Project::Operation::Show do
+          render json: @model, status: :ok
+        end
       end
 
       def update
@@ -31,7 +33,7 @@ module Api
 
       def destroy
         run Project::Operation::Destroy do
-          render json: { message: 'Project destroy successfully' }
+          head :no_content
         end
       end
     end
