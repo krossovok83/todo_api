@@ -1,7 +1,7 @@
 {
   "openapi": "3.0.0",
   "info": {
-    "title": "API Documentation",
+    "title": "API ToDo",
     "description": "ToDo list\n",
     "version": "1.0"
   },
@@ -31,11 +31,11 @@
               "examples": {
                 "login": {
                   "summary": "login",
-                  "value": "email=examle%40example.com&password=password"
+                  "value": "email=example%40example.com&password=password"
                 },
                 "invalid user": {
                   "summary": "invalid user",
-                  "value": "email=examle%40com&password=password"
+                  "value": "email=example%40example.combad&password=password"
                 }
               }
             }
@@ -50,9 +50,9 @@
                   "login": {
                     "summary": "login",
                     "value": {
-                      "token": "eyJhbGciOiJIUzI1NiJ9.eyJ1c2VyX2lkIjoxMjksImV4cCI6MTY1MDE5NjU0NX0.FXxgMvlMOM3w9Vh_KOvJU3hlcg_LQPPbjs6JdCkcnSA",
-                      "exp": "04-17-2022 14:55",
-                      "username": "examle@example.com"
+                      "token": "eyJhbGciOiJIUzI1NiJ9.eyJ1c2VyX2lkIjo0NzM4LCJleHAiOjE2NTMwNzU4ODJ9.5l8JVduxnadmF3H2t0e6fOze3mRUdu0aq9o3SXaaNGw",
+                      "exp": "05-20-2022 22:44",
+                      "username": "example@example.com"
                     }
                   }
                 }
@@ -135,7 +135,7 @@
                   "logout non-authorized user": {
                     "summary": "logout non-authorized user",
                     "value": {
-                      "errors": "Not enough or too many segments"
+                      "errors": "Not authorized"
                     }
                   }
                 }
@@ -144,6 +144,949 @@
             "headers": {
               "Content-Type": {
                 "description": "application/json; charset=utf-8"
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/projects/{project_id}/tasks/{task_id}/comments": {
+      "post": {
+        "summary": "Create Comment",
+        "tags": [
+          "Comments"
+        ],
+        "description": "",
+        "parameters": [
+          {
+            "name": "project_id",
+            "in": "path",
+            "schema": {
+              "type": "number"
+            },
+            "example": "2789"
+          },
+          {
+            "name": "task_id",
+            "in": "path",
+            "schema": {
+              "type": "number"
+            },
+            "example": "1606"
+          },
+          {
+            "name": "Accept",
+            "in": "header",
+            "example": "text/xml,application/xml,application/xhtml+xml,text/html;q=0.9,text/plain;q=0.8,image/png,*/*;q=0.5"
+          },
+          {
+            "name": "Content-Type",
+            "in": "header",
+            "example": "application/x-www-form-urlencoded"
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "text/xml,application/xml,application/xhtml+xml,text/html;q=0.9,text/plain;q=0.8,image/png,*/*;q=0.5": {
+              "examples": {
+                "valid params": {
+                  "summary": "valid params",
+                  "value": "body=Dignissimos+dolore+id+fugiat+aspernatur+delectus+quos+voluptate."
+                },
+                "short body": {
+                  "summary": "short body",
+                  "value": "body=f"
+                },
+                "long body": {
+                  "summary": "long body",
+                  "value": "body[]=Ipsum+delectus+quam+possimus+porro.+Laboriosam+distinctio+corrupti+recusandae+quibusdam+similique+perferendis.+Aliquid+inventore+voluptatibus+sed+debitis.+Eligendi+adipisci+doloribus+dolorum+iure+laborum+rerum+debitis.&body[]=Nesciunt+totam+facilis+minima+ducimus.+Veritatis+delectus+tenetur+corrupti+quisquam+ratione.+Temporibus+illum+occaecati+veritatis+sequi+inventore+dolor+culpa+consequatur.+Inventore+qui+ex+nulla+eaque.&body[]=Fuga+quo+dicta+numquam+occaecati+nostrum.+Minima+minus+corporis+perferendis+nam+sapiente+nisi.+Atque+voluptatem+eligendi+rem+cum+doloremque+iusto+inventore.+Repellendus+facere+nulla+saepe+repellat+error+blanditiis."
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Created",
+            "content": {
+              "application/json; charset=utf-8": {
+                "examples": {
+                  "valid params": {
+                    "summary": "valid params",
+                    "value": {
+                      "data": {
+                        "id": "363",
+                        "type": "comment",
+                        "attributes": {
+                          "body": "Dignissimos dolore id fugiat aspernatur delectus quos voluptate.",
+                          "image": null
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            },
+            "headers": {
+              "Content-Type": {
+                "description": "application/json; charset=utf-8"
+              }
+            }
+          },
+          "422": {
+            "description": "Unprocessable Entity",
+            "content": {
+              "application/json; charset=utf-8": {
+                "examples": {
+                  "short body": {
+                    "summary": "short body",
+                    "value": {
+                      "errors": [
+                        "Body is too short (minimum is 10 characters)"
+                      ]
+                    }
+                  },
+                  "long body": {
+                    "summary": "long body",
+                    "value": {
+                      "errors": [
+                        "Body is too short (minimum is 10 characters)"
+                      ]
+                    }
+                  }
+                }
+              }
+            },
+            "headers": {
+              "Content-Type": {
+                "description": "application/json; charset=utf-8"
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/projects/{project_id}/tasks/{task_id}/comments/{id}": {
+      "delete": {
+        "summary": "Destroy Comment",
+        "tags": [
+          "Comments"
+        ],
+        "description": "",
+        "parameters": [
+          {
+            "name": "project_id",
+            "in": "path",
+            "schema": {
+              "type": "number"
+            },
+            "example": "2792"
+          },
+          {
+            "name": "task_id",
+            "in": "path",
+            "schema": {
+              "type": "number"
+            },
+            "example": "1609"
+          },
+          {
+            "name": "id",
+            "in": "path",
+            "schema": {
+              "type": "number"
+            },
+            "example": "364"
+          },
+          {
+            "name": "Accept",
+            "in": "header",
+            "example": "text/xml,application/xml,application/xhtml+xml,text/html;q=0.9,text/plain;q=0.8,image/png,*/*;q=0.5"
+          },
+          {
+            "name": "Content-Type",
+            "in": "header",
+            "example": "application/x-www-form-urlencoded"
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "No Content",
+            "content": {
+              "any": {
+              }
+            },
+            "headers": {
+            }
+          },
+          "404": {
+            "description": "Not Found",
+            "content": {
+              "text/html": {
+              }
+            },
+            "headers": {
+              "Content-Type": {
+                "description": "text/html"
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/projects": {
+      "get": {
+        "summary": "Get Index",
+        "tags": [
+          "Projects"
+        ],
+        "description": "",
+        "parameters": [
+          {
+            "name": "Accept",
+            "in": "header",
+            "example": "text/xml,application/xml,application/xhtml+xml,text/html;q=0.9,text/plain;q=0.8,image/png,*/*;q=0.5"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json; charset=utf-8": {
+                "examples": {
+                  "get index": {
+                    "summary": "get index",
+                    "value": [
+
+                    ]
+                  }
+                }
+              }
+            },
+            "headers": {
+              "Content-Type": {
+                "description": "application/json; charset=utf-8"
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "summary": "Create Project",
+        "tags": [
+          "Projects"
+        ],
+        "description": "",
+        "parameters": [
+          {
+            "name": "Accept",
+            "in": "header",
+            "example": "text/xml,application/xml,application/xhtml+xml,text/html;q=0.9,text/plain;q=0.8,image/png,*/*;q=0.5"
+          },
+          {
+            "name": "Content-Type",
+            "in": "header",
+            "example": "application/x-www-form-urlencoded"
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "text/xml,application/xml,application/xhtml+xml,text/html;q=0.9,text/plain;q=0.8,image/png,*/*;q=0.5": {
+              "examples": {
+                "valid params": {
+                  "summary": "valid params",
+                  "value": "title=mediumaquamarine"
+                },
+                "short title": {
+                  "summary": "short title",
+                  "value": "title=q"
+                },
+                "long title": {
+                  "summary": "long title",
+                  "value": "title=Sint+ipsa+omnis+fuga+repudiandae+eaque+qui+repellat+mollitia.+Vel+debitis+dignissimos+aut+minus+suscipit+provident.+Alias+asperiores+placeat+deserunt+vitae+architecto+dolorum+cum+repellendus."
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Created",
+            "content": {
+              "application/json; charset=utf-8": {
+                "examples": {
+                  "valid params": {
+                    "summary": "valid params",
+                    "value": {
+                      "id": 2796,
+                      "title": "mediumaquamarine",
+                      "user_id": 4751,
+                      "created_at": "2022-05-19T19:44:43.208Z",
+                      "updated_at": "2022-05-19T19:44:43.208Z"
+                    }
+                  }
+                }
+              }
+            },
+            "headers": {
+              "Content-Type": {
+                "description": "application/json; charset=utf-8"
+              }
+            }
+          },
+          "422": {
+            "description": "Unprocessable Entity",
+            "content": {
+              "application/json; charset=utf-8": {
+                "examples": {
+                  "short title": {
+                    "summary": "short title",
+                    "value": {
+                      "errors": [
+                        "Title is too short (minimum is 3 characters)"
+                      ]
+                    }
+                  },
+                  "long title": {
+                    "summary": "long title",
+                    "value": {
+                      "errors": [
+                        "Title is too long (maximum is 50 characters)"
+                      ]
+                    }
+                  }
+                }
+              }
+            },
+            "headers": {
+              "Content-Type": {
+                "description": "application/json; charset=utf-8"
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/projects/{id}": {
+      "get": {
+        "summary": "Show Project",
+        "tags": [
+          "Projects"
+        ],
+        "description": "",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "schema": {
+              "type": "number"
+            },
+            "example": "2797"
+          },
+          {
+            "name": "Accept",
+            "in": "header",
+            "example": "text/xml,application/xml,application/xhtml+xml,text/html;q=0.9,text/plain;q=0.8,image/png,*/*;q=0.5"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json; charset=utf-8": {
+                "examples": {
+                  "existing project": {
+                    "summary": "existing project",
+                    "value": {
+                      "id": 2797,
+                      "title": "blueviolet",
+                      "user_id": 4754,
+                      "created_at": "2022-05-19T19:44:43.273Z",
+                      "updated_at": "2022-05-19T19:44:43.273Z"
+                    }
+                  }
+                }
+              }
+            },
+            "headers": {
+              "Content-Type": {
+                "description": "application/json; charset=utf-8"
+              }
+            }
+          },
+          "404": {
+            "description": "Not Found",
+            "content": {
+              "text/html": {
+              }
+            },
+            "headers": {
+              "Content-Type": {
+                "description": "text/html"
+              }
+            }
+          }
+        }
+      },
+      "put": {
+        "summary": "Update Project",
+        "tags": [
+          "Projects"
+        ],
+        "description": "",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "schema": {
+              "type": "number"
+            },
+            "example": "2798"
+          },
+          {
+            "name": "Accept",
+            "in": "header",
+            "example": "text/xml,application/xml,application/xhtml+xml,text/html;q=0.9,text/plain;q=0.8,image/png,*/*;q=0.5"
+          },
+          {
+            "name": "Content-Type",
+            "in": "header",
+            "example": "application/x-www-form-urlencoded"
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "text/xml,application/xml,application/xhtml+xml,text/html;q=0.9,text/plain;q=0.8,image/png,*/*;q=0.5": {
+              "examples": {
+                "valid params": {
+                  "summary": "valid params",
+                  "value": "title=limegreen"
+                },
+                "short title": {
+                  "summary": "short title",
+                  "value": "title=q"
+                },
+                "long title": {
+                  "summary": "long title",
+                  "value": "title=Tempore+earum+culpa+fugit+aut.+Molestias+voluptatem+facere+molestiae+odio+ea+eius+recusandae+unde.+Excepturi+repellat+iure+non+praesentium+numquam+aut+error.+Repellendus+rem+cum+nulla+impedit+eaque."
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json; charset=utf-8": {
+                "examples": {
+                  "valid params": {
+                    "summary": "valid params",
+                    "value": {
+                      "title": "limegreen",
+                      "user_id": 4756,
+                      "id": 2798,
+                      "created_at": "2022-05-19T19:44:43.313Z",
+                      "updated_at": "2022-05-19T19:44:43.336Z"
+                    }
+                  }
+                }
+              }
+            },
+            "headers": {
+              "Content-Type": {
+                "description": "application/json; charset=utf-8"
+              }
+            }
+          },
+          "422": {
+            "description": "Unprocessable Entity",
+            "content": {
+              "application/json; charset=utf-8": {
+                "examples": {
+                  "short title": {
+                    "summary": "short title",
+                    "value": {
+                      "errors": [
+                        "Title is too short (minimum is 3 characters)"
+                      ]
+                    }
+                  },
+                  "long title": {
+                    "summary": "long title",
+                    "value": {
+                      "errors": [
+                        "Title is too long (maximum is 50 characters)"
+                      ]
+                    }
+                  }
+                }
+              }
+            },
+            "headers": {
+              "Content-Type": {
+                "description": "application/json; charset=utf-8"
+              }
+            }
+          },
+          "404": {
+            "description": "Not Found",
+            "content": {
+              "text/html": {
+              }
+            },
+            "headers": {
+              "Content-Type": {
+                "description": "text/html"
+              }
+            }
+          }
+        }
+      },
+      "delete": {
+        "summary": "Destroy Project",
+        "tags": [
+          "Projects"
+        ],
+        "description": "",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "schema": {
+              "type": "number"
+            },
+            "example": "2801"
+          },
+          {
+            "name": "Accept",
+            "in": "header",
+            "example": "text/xml,application/xml,application/xhtml+xml,text/html;q=0.9,text/plain;q=0.8,image/png,*/*;q=0.5"
+          },
+          {
+            "name": "Content-Type",
+            "in": "header",
+            "example": "application/x-www-form-urlencoded"
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "No Content",
+            "content": {
+              "any": {
+              }
+            },
+            "headers": {
+            }
+          },
+          "404": {
+            "description": "Not Found",
+            "content": {
+              "text/html": {
+              }
+            },
+            "headers": {
+              "Content-Type": {
+                "description": "text/html"
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/projects/{project_id}/tasks": {
+      "post": {
+        "summary": "Create Task",
+        "tags": [
+          "Tasks"
+        ],
+        "description": "",
+        "parameters": [
+          {
+            "name": "project_id",
+            "in": "path",
+            "schema": {
+              "type": "number"
+            },
+            "example": "2806"
+          },
+          {
+            "name": "Accept",
+            "in": "header",
+            "example": "text/xml,application/xml,application/xhtml+xml,text/html;q=0.9,text/plain;q=0.8,image/png,*/*;q=0.5"
+          },
+          {
+            "name": "Content-Type",
+            "in": "header",
+            "example": "application/x-www-form-urlencoded"
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "text/xml,application/xml,application/xhtml+xml,text/html;q=0.9,text/plain;q=0.8,image/png,*/*;q=0.5": {
+              "examples": {
+                "valid params": {
+                  "summary": "valid params",
+                  "value": "title=Sharable+intangible+standardization"
+                },
+                "short title": {
+                  "summary": "short title",
+                  "value": "title=q"
+                },
+                "long title": {
+                  "summary": "long title",
+                  "value": "title=Tempora+dignissimos+repellendus+esse+labore+dolor+voluptatum.+Modi+est+at+sunt+iure+mollitia.+Voluptatem+non+magni+quas+mollitia+iure+quae+ipsa+illo.+Nesciunt+exercitationem+nobis+est+expedita+blanditiis+aspernatur+ratione.+Dignissimos+ipsam+nulla+eum+impedit+quod+ab+aperiam."
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Created",
+            "content": {
+              "application/json; charset=utf-8": {
+                "examples": {
+                  "valid params": {
+                    "summary": "valid params",
+                    "value": {
+                      "id": 1616,
+                      "project_id": 2806,
+                      "title": "Sharable intangible standardization",
+                      "deadline": null,
+                      "position": 1,
+                      "completed": false,
+                      "created_at": "2022-05-19T19:44:43.549Z",
+                      "updated_at": "2022-05-19T19:44:43.549Z"
+                    }
+                  }
+                }
+              }
+            },
+            "headers": {
+              "Content-Type": {
+                "description": "application/json; charset=utf-8"
+              }
+            }
+          },
+          "422": {
+            "description": "Unprocessable Entity",
+            "content": {
+              "application/json; charset=utf-8": {
+                "examples": {
+                  "short title": {
+                    "summary": "short title",
+                    "value": {
+                      "errors": [
+                        "Title is too short (minimum is 3 characters)"
+                      ]
+                    }
+                  },
+                  "long title": {
+                    "summary": "long title",
+                    "value": {
+                      "errors": [
+                        "Title is too long (maximum is 50 characters)"
+                      ]
+                    }
+                  }
+                }
+              }
+            },
+            "headers": {
+              "Content-Type": {
+                "description": "application/json; charset=utf-8"
+              }
+            }
+          },
+          "404": {
+            "description": "Not Found",
+            "content": {
+              "application/json; charset=utf-8": {
+                "examples": {
+                  "non-existent project": {
+                    "summary": "non-existent project",
+                    "value": {
+                      "errors": [
+
+                      ]
+                    }
+                  }
+                }
+              }
+            },
+            "headers": {
+              "Content-Type": {
+                "description": "application/json; charset=utf-8"
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/projects/{project_id}/tasks/{id}": {
+      "get": {
+        "summary": "Show Task",
+        "tags": [
+          "Tasks"
+        ],
+        "description": "",
+        "parameters": [
+          {
+            "name": "project_id",
+            "in": "path",
+            "schema": {
+              "type": "number"
+            },
+            "example": "2809"
+          },
+          {
+            "name": "id",
+            "in": "path",
+            "schema": {
+              "type": "number"
+            },
+            "example": "1617"
+          },
+          {
+            "name": "Accept",
+            "in": "header",
+            "example": "text/xml,application/xml,application/xhtml+xml,text/html;q=0.9,text/plain;q=0.8,image/png,*/*;q=0.5"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json; charset=utf-8": {
+                "examples": {
+                  "valid": {
+                    "summary": "valid",
+                    "value": {
+                      "id": 1617,
+                      "project_id": 2809,
+                      "title": "User-centric client-server info-mediaries",
+                      "deadline": null,
+                      "position": 1,
+                      "completed": false,
+                      "created_at": "2022-05-19T19:44:43.633Z",
+                      "updated_at": "2022-05-19T19:44:43.633Z"
+                    }
+                  }
+                }
+              }
+            },
+            "headers": {
+              "Content-Type": {
+                "description": "application/json; charset=utf-8"
+              }
+            }
+          },
+          "404": {
+            "description": "Not Found",
+            "content": {
+              "text/html": {
+              }
+            },
+            "headers": {
+              "Content-Type": {
+                "description": "text/html"
+              }
+            }
+          }
+        }
+      },
+      "put": {
+        "summary": "Update Task",
+        "tags": [
+          "Tasks"
+        ],
+        "description": "",
+        "parameters": [
+          {
+            "name": "project_id",
+            "in": "path",
+            "schema": {
+              "type": "number"
+            },
+            "example": "2812"
+          },
+          {
+            "name": "id",
+            "in": "path",
+            "schema": {
+              "type": "number"
+            },
+            "example": "1619"
+          },
+          {
+            "name": "Accept",
+            "in": "header",
+            "example": "text/xml,application/xml,application/xhtml+xml,text/html;q=0.9,text/plain;q=0.8,image/png,*/*;q=0.5"
+          },
+          {
+            "name": "Content-Type",
+            "in": "header",
+            "example": "application/x-www-form-urlencoded"
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "text/xml,application/xml,application/xhtml+xml,text/html;q=0.9,text/plain;q=0.8,image/png,*/*;q=0.5": {
+              "examples": {
+                "valid": {
+                  "summary": "valid",
+                  "value": "title=Persistent+clear-thinking+conglomeration"
+                },
+                "short title": {
+                  "summary": "short title",
+                  "value": "title=q"
+                },
+                "long title": {
+                  "summary": "long title",
+                  "value": "title=Eveniet+accusamus+ullam+eligendi+libero.+Atque+consequuntur+aliquid+nisi+error+ex+maiores+libero+eveniet.+Odit+illo+nulla+doloribus+dolor+sed+distinctio.+Impedit+ea+non+cupiditate+quaerat+enim+quod+voluptatum+animi.+Ipsam+architecto+consequuntur+ipsum+aliquid+odio+occaecati+quis."
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json; charset=utf-8": {
+                "examples": {
+                  "valid": {
+                    "summary": "valid",
+                    "value": {
+                      "title": "Persistent clear-thinking conglomeration",
+                      "project_id": 2812,
+                      "deadline": null,
+                      "position": 1,
+                      "completed": false,
+                      "id": 1619,
+                      "created_at": "2022-05-19T19:44:43.710Z",
+                      "updated_at": "2022-05-19T19:44:43.730Z"
+                    }
+                  }
+                }
+              }
+            },
+            "headers": {
+              "Content-Type": {
+                "description": "application/json; charset=utf-8"
+              }
+            }
+          },
+          "422": {
+            "description": "Unprocessable Entity",
+            "content": {
+              "application/json; charset=utf-8": {
+                "examples": {
+                  "short title": {
+                    "summary": "short title",
+                    "value": {
+                      "errors": [
+                        "Title is too short (minimum is 3 characters)"
+                      ]
+                    }
+                  },
+                  "long title": {
+                    "summary": "long title",
+                    "value": {
+                      "errors": [
+                        "Title is too long (maximum is 50 characters)"
+                      ]
+                    }
+                  }
+                }
+              }
+            },
+            "headers": {
+              "Content-Type": {
+                "description": "application/json; charset=utf-8"
+              }
+            }
+          },
+          "404": {
+            "description": "Not Found",
+            "content": {
+              "application/json; charset=utf-8": {
+                "examples": {
+                  "non-existent project": {
+                    "summary": "non-existent project",
+                    "value": {
+                      "errors": [
+
+                      ]
+                    }
+                  }
+                }
+              },
+              "text/html": {
+              }
+            },
+            "headers": {
+              "Content-Type": {
+                "description": "text/html"
+              }
+            }
+          }
+        }
+      },
+      "delete": {
+        "summary": "Destroy Task",
+        "tags": [
+          "Tasks"
+        ],
+        "description": "",
+        "parameters": [
+          {
+            "name": "project_id",
+            "in": "path",
+            "schema": {
+              "type": "number"
+            },
+            "example": "2817"
+          },
+          {
+            "name": "id",
+            "in": "path",
+            "schema": {
+              "type": "number"
+            },
+            "example": "1623"
+          },
+          {
+            "name": "Accept",
+            "in": "header",
+            "example": "text/xml,application/xml,application/xhtml+xml,text/html;q=0.9,text/plain;q=0.8,image/png,*/*;q=0.5"
+          },
+          {
+            "name": "Content-Type",
+            "in": "header",
+            "example": "application/x-www-form-urlencoded"
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "No Content",
+            "content": {
+              "any": {
+              }
+            },
+            "headers": {
+            }
+          },
+          "404": {
+            "description": "Not Found",
+            "content": {
+              "text/html": {
+              }
+            },
+            "headers": {
+              "Content-Type": {
+                "description": "text/html"
               }
             }
           }
@@ -218,11 +1161,12 @@
                   "create user": {
                     "summary": "create user",
                     "value": {
-                      "id": 133,
+                      "id": 4781,
                       "email": "examle@example.com",
-                      "password_digest": "$2a$04$6S9nI/ndotc/YnYuviGMrOb2JqFECM9qNyf1wT76I2Fxm4aRvd45.",
-                      "created_at": "2022-04-16T11:55:45.473Z",
-                      "updated_at": "2022-04-16T11:55:45.473Z"
+                      "password_digest": "$2a$04$yJzEAxVaPNAqy9oGeFbyOumervj2i.zc6HMjKBxcVF8XrsaSctgtq",
+                      "created_at": "2022-05-19T19:44:43.948Z",
+                      "updated_at": "2022-05-19T19:44:43.948Z",
+                      "token": null
                     }
                   }
                 }
@@ -317,6 +1261,18 @@
       "description": ""
     },
     {
+      "name": "Comments",
+      "description": ""
+    },
+    {
+      "name": "Projects",
+      "description": ""
+    },
+    {
+      "name": "Tasks",
+      "description": ""
+    },
+    {
       "name": "Users",
       "description": ""
     }
@@ -326,6 +1282,24 @@
       "name": "Authentication",
       "tags": [
         "Auth"
+      ]
+    },
+    {
+      "name": "Comments",
+      "tags": [
+        "Comments"
+      ]
+    },
+    {
+      "name": "Projects",
+      "tags": [
+        "Projects"
+      ]
+    },
+    {
+      "name": "Tasks",
+      "tags": [
+        "Tasks"
       ]
     },
     {

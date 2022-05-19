@@ -1,28 +1,30 @@
 # frozen_string_literal: true
 
 RSpec.describe Api::V1::ProjectsController, type: :request do
+  include Docs::V1::Projects::Api
+
   describe 'not authorized' do
-    it 'index', :dox do
+    it 'index' do
       get '/api/v1/projects'
       expect(response).to have_http_status :unauthorized
     end
 
-    it 'create', :dox do
+    it 'create' do
       post '/api/v1/projects'
       expect(response).to have_http_status :unauthorized
     end
 
-    it 'show', :dox do
+    it 'show' do
       get '/api/v1/projects/1'
       expect(response).to have_http_status :unauthorized
     end
 
-    it 'update', :dox do
+    it 'update' do
       put '/api/v1/projects/1'
       expect(response).to have_http_status :unauthorized
     end
 
-    it 'delete', :dox do
+    it 'delete' do
       get '/api/v1/projects/1'
       expect(response).to have_http_status :unauthorized
     end
@@ -36,6 +38,8 @@ RSpec.describe Api::V1::ProjectsController, type: :request do
     end
 
     describe 'index' do
+      include Docs::V1::Projects::Index
+
       it 'get index', :dox do
         get '/api/v1/projects'
         expect(response).to have_http_status :ok
@@ -43,6 +47,8 @@ RSpec.describe Api::V1::ProjectsController, type: :request do
     end
 
     describe 'create' do
+      include Docs::V1::Projects::Create
+
       it 'valid params', :dox do
         post '/api/v1/projects', params: FactoryBot.attributes_for(:project)
         expect(response).to have_http_status :created
@@ -60,6 +66,8 @@ RSpec.describe Api::V1::ProjectsController, type: :request do
     end
 
     describe 'show' do
+      include Docs::V1::Projects::Show
+
       let(:project) { FactoryBot.create(:project, user: current_user) }
 
       it 'existing project', :dox do
@@ -68,11 +76,14 @@ RSpec.describe Api::V1::ProjectsController, type: :request do
       end
 
       it 'non-existent project', :dox do
-        expect { get '/api/v1/projects/some_id' }.to raise_error(ActiveRecord::RecordNotFound)
+        get '/api/v1/projects/some_id'
+        expect(response).to have_http_status :not_found
       end
     end
 
     describe 'update' do
+      include Docs::V1::Projects::Update
+
       let(:project) { FactoryBot.create(:project, user: current_user) }
 
       it 'valid params', :dox do
@@ -91,11 +102,14 @@ RSpec.describe Api::V1::ProjectsController, type: :request do
       end
 
       it 'non-existent project', :dox do
-        expect { put '/api/v1/projects/some_id' }.to raise_error(ActiveRecord::RecordNotFound)
+        put '/api/v1/projects/some_id'
+        expect(response).to have_http_status :not_found
       end
     end
 
     describe 'destroy' do
+      include Docs::V1::Projects::Destroy
+
       let(:project) { FactoryBot.create(:project, user: current_user) }
 
       it 'valid params', :dox do
@@ -104,7 +118,8 @@ RSpec.describe Api::V1::ProjectsController, type: :request do
       end
 
       it 'non-existent project', :dox do
-        expect { delete '/api/v1/projects/some_id' }.to raise_error(ActiveRecord::RecordNotFound)
+        delete '/api/v1/projects/some_id'
+        expect(response).to have_http_status :not_found
       end
     end
   end

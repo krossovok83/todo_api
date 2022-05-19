@@ -14,15 +14,17 @@ module Api
 
       def show
         run Task::Operation::Show do
-          render json: @model
+          render json: @model and return
         end
-        head :not_found if result['result.policy.default'].failure?
+        head :not_found
       end
 
       def update
         run Task::Operation::Update do
           render(json: @model) and return
         end
+        head result[:status] and return if result['result.model'].failure?
+
         render json: { errors: @form.errors.full_messages }, status: result[:status]
       end
 

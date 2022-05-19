@@ -1,18 +1,20 @@
 # frozen_string_literal: true
 
-RSpec.describe Api::V1::TasksController, type: :request do
+RSpec.describe Api::V1::CommentsController, type: :request do
+  include Docs::V1::Comments::Api
+
   let(:current_user) { FactoryBot.create(:user) }
   let(:current_project) { FactoryBot.create(:project, user: current_user) }
   let(:current_task) { FactoryBot.create(:task, project: current_project) }
   let(:comment) { FactoryBot.create(:comment, task: current_task) }
 
   describe 'not authorized' do
-    it 'create', :dox do
+    it 'create' do
       post "/api/v1/projects/#{current_project.id}/tasks/#{current_task.id}/comments"
       expect(response).to have_http_status :unauthorized
     end
 
-    it 'delete', :dox do
+    it 'delete' do
       delete "/api/v1/projects/#{current_project.id}/tasks/#{current_task.id}/comments/#{comment.id}"
       expect(response).to have_http_status :unauthorized
     end
@@ -25,6 +27,8 @@ RSpec.describe Api::V1::TasksController, type: :request do
     end
 
     describe 'create' do
+      include Docs::V1::Comments::Create
+
       it 'valid params', :dox do
         post "/api/v1/projects/#{current_project.id}/tasks/#{current_task.id}/comments",
              params: FactoryBot.attributes_for(:comment)
@@ -44,7 +48,9 @@ RSpec.describe Api::V1::TasksController, type: :request do
       end
     end
 
-    describe 'delete' do
+    describe 'destroy' do
+      include Docs::V1::Comments::Destroy
+
       it 'valid params', :dox do
         delete "/api/v1/projects/#{current_project.id}/tasks/#{current_task.id}/comments/#{comment.id}"
         expect(response).to have_http_status :no_content

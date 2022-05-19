@@ -20,21 +20,25 @@ module Api
 
       def show
         run Project::Operation::Show do
-          render json: @model, status: :ok
+          render json: @model and return
         end
+        head :not_found
       end
 
       def update
         run Project::Operation::Update do
-          render(json: @model, status: :ok) and return
+          render(json: @model) and return
         end
-        render json: { errors: @form.errors.full_messages }, status: :unprocessable_entity
+        head result[:status] and return if result['result.model'].failure?
+
+        render json: { errors: @form.errors.full_messages }, status: result[:status]
       end
 
       def destroy
         run Project::Operation::Destroy do
-          head :no_content
+          return head :no_content
         end
+        head :not_found
       end
     end
   end
