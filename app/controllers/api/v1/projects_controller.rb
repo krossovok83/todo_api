@@ -7,13 +7,13 @@ module Api
 
       def index
         run Project::Operation::Index do
-          render json: @model
+          render json: ProjectSerializer.new(@model).serializable_hash.to_json
         end
       end
 
       def create
         run Project::Operation::Create do
-          render(json: @model, status: :created) and return
+          render(json: ProjectSerializer.new(@model).serializable_hash.to_json, status: :created) and return
         end
         render json: { errors: @form.errors.full_messages }, status: :unprocessable_entity
       end
@@ -36,7 +36,7 @@ module Api
 
       def destroy
         run Project::Operation::Destroy do
-          return head :no_content
+          return head :ok
         end
         head :not_found
       end

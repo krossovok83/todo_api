@@ -112,7 +112,7 @@ RSpec.describe Api::V1::TasksController, type: :request do
 
       it 'valid params', :dox do
         delete "/api/v1/projects/#{current_project.id}/tasks/#{task.id}"
-        expect(response).to have_http_status :no_content
+        expect(response).to have_http_status :ok
       end
 
       it 'non-existent project', :dox do

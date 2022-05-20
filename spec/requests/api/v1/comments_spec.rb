@@ -53,7 +53,7 @@ RSpec.describe Api::V1::CommentsController, type: :request do
 
       it 'valid params', :dox do
         delete "/api/v1/projects/#{current_project.id}/tasks/#{current_task.id}/comments/#{comment.id}"
-        expect(response).to have_http_status :no_content
+        expect(response).to have_http_status :ok
       end
 
       it 'non-existent project', :dox do

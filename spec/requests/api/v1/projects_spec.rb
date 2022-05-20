@@ -114,7 +114,7 @@ RSpec.describe Api::V1::ProjectsController, type: :request do
 
       it 'valid params', :dox do
         delete "/api/v1/projects/#{project.id}"
-        expect(response).to have_http_status :no_content
+        expect(response).to have_http_status :ok
       end
 
       it 'non-existent project', :dox do

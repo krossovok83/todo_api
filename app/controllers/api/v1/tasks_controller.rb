@@ -7,7 +7,7 @@ module Api
 
       def create
         run Task::Operation::Create do
-          render(json: @model, status: :created) and return
+          render(json: TaskSerializer.new(@model).serializable_hash.to_json, status: :created) and return
         end
         render json: { errors: @form.errors.full_messages }, status: result[:status]
       end
@@ -30,7 +30,7 @@ module Api
 
       def destroy
         run Task::Operation::Destroy do
-          return head :no_content
+          return head :ok
         end
         head :not_found
       end

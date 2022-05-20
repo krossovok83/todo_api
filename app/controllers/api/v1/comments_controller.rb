@@ -14,7 +14,7 @@ module Api
 
       def destroy
         run Comment::Operation::Destroy do
-          return head :no_content
+          return head :ok
         end
         head :not_found
       end
