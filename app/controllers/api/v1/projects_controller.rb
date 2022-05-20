@@ -27,7 +27,7 @@ module Api
 
       def update
         run Project::Operation::Update do
-          render(json: @model) and return
+          return head :ok
         end
         head result[:status] and return if result['result.model'].failure?
 
