@@ -14,7 +14,7 @@ module Api
 
       def show
         run Task::Operation::Show do
-          render json: @model and return
+          render json: TaskSerializer.new(@model, { include: [:comments] }).serializable_hash.to_json and return
         end
         head :not_found
       end

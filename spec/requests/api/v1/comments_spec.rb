@@ -33,6 +33,7 @@ RSpec.describe Api::V1::CommentsController, type: :request do
         post "/api/v1/projects/#{current_project.id}/tasks/#{current_task.id}/comments",
              params: FactoryBot.attributes_for(:comment)
         expect(response).to have_http_status :created
+        expect(response).to match_json_schema('show_task')
       end
 
       it 'short body', :dox do

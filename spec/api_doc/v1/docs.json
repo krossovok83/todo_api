@@ -50,8 +50,8 @@
                   "login": {
                     "summary": "login",
                     "value": {
-                      "token": "eyJhbGciOiJIUzI1NiJ9.eyJ1c2VyX2lkIjo0NzM4LCJleHAiOjE2NTMwNzU4ODJ9.5l8JVduxnadmF3H2t0e6fOze3mRUdu0aq9o3SXaaNGw",
-                      "exp": "05-20-2022 22:44",
+                      "token": "eyJhbGciOiJIUzI1NiJ9.eyJ1c2VyX2lkIjo2MTMzLCJleHAiOjE2NTMyMjE5ODB9.4rqvshEuZT-3NvH9eatVwlaGohLS4EaV4TDtNrzRHeE",
+                      "exp": "05-22-2022 15:19",
                       "username": "example@example.com"
                     }
                   }
@@ -164,7 +164,7 @@
             "schema": {
               "type": "number"
             },
-            "example": "2789"
+            "example": "3812"
           },
           {
             "name": "task_id",
@@ -172,7 +172,7 @@
             "schema": {
               "type": "number"
             },
-            "example": "1606"
+            "example": "2257"
           },
           {
             "name": "Accept",
@@ -191,7 +191,7 @@
               "examples": {
                 "valid params": {
                   "summary": "valid params",
-                  "value": "body=Dignissimos+dolore+id+fugiat+aspernatur+delectus+quos+voluptate."
+                  "value": "body=Tenetur+nesciunt+eum+nulla+vel+deleniti+aut+cumque+unde."
                 },
                 "short body": {
                   "summary": "short body",
@@ -199,7 +199,7 @@
                 },
                 "long body": {
                   "summary": "long body",
-                  "value": "body[]=Ipsum+delectus+quam+possimus+porro.+Laboriosam+distinctio+corrupti+recusandae+quibusdam+similique+perferendis.+Aliquid+inventore+voluptatibus+sed+debitis.+Eligendi+adipisci+doloribus+dolorum+iure+laborum+rerum+debitis.&body[]=Nesciunt+totam+facilis+minima+ducimus.+Veritatis+delectus+tenetur+corrupti+quisquam+ratione.+Temporibus+illum+occaecati+veritatis+sequi+inventore+dolor+culpa+consequatur.+Inventore+qui+ex+nulla+eaque.&body[]=Fuga+quo+dicta+numquam+occaecati+nostrum.+Minima+minus+corporis+perferendis+nam+sapiente+nisi.+Atque+voluptatem+eligendi+rem+cum+doloremque+iusto+inventore.+Repellendus+facere+nulla+saepe+repellat+error+blanditiis."
+                  "value": "body[]=Esse+voluptates+in+reiciendis+id+quibusdam+praesentium.+Odio+error+ducimus+occaecati+quisquam.+Quo+harum+ad+quam+atque.+Culpa+suscipit+veniam+perspiciatis+porro+dolor+consequatur.+Molestias+unde+alias+aut+voluptatem.&body[]=Facilis+alias+deleniti+velit+id.+Iste+vitae+dolores+pariatur+minima+maiores.+Velit+praesentium+magnam+ratione+fugit+rem.+Cupiditate+aut+rerum+hic+nesciunt+deleniti+fuga+ipsa+amet.+Accusamus+quos+consequuntur+harum+doloribus+earum+tempore+amet+assumenda.&body[]=Provident+occaecati+accusamus+autem+at+perspiciatis+vel+fuga.+Saepe+accusantium+explicabo+odit+vel+asperiores+accusamus+provident.+Dolor+iusto+quo+fuga+dignissimos+perspiciatis+quia."
                 }
               }
             }
@@ -215,13 +215,49 @@
                     "summary": "valid params",
                     "value": {
                       "data": {
-                        "id": "363",
-                        "type": "comment",
+                        "id": "2257",
+                        "type": "task",
                         "attributes": {
-                          "body": "Dignissimos dolore id fugiat aspernatur delectus quos voluptate.",
-                          "image": null
+                          "title": "Compatible clear-thinking help-desk",
+                          "deadline": null,
+                          "position": 1,
+                          "completed": false
+                        },
+                        "relationships": {
+                          "project": {
+                            "data": {
+                              "id": "3812",
+                              "type": "project"
+                            }
+                          },
+                          "comments": {
+                            "data": [
+                              {
+                                "id": "518",
+                                "type": "comment"
+                              }
+                            ]
+                          }
                         }
-                      }
+                      },
+                      "included": [
+                        {
+                          "id": "518",
+                          "type": "comment",
+                          "attributes": {
+                            "body": "Tenetur nesciunt eum nulla vel deleniti aut cumque unde.",
+                            "image": null
+                          },
+                          "relationships": {
+                            "task": {
+                              "data": {
+                                "id": "2257",
+                                "type": "task"
+                              }
+                            }
+                          }
+                        }
+                      ]
                     }
                   }
                 }
@@ -280,7 +316,7 @@
             "schema": {
               "type": "number"
             },
-            "example": "2792"
+            "example": "3815"
           },
           {
             "name": "task_id",
@@ -288,7 +324,7 @@
             "schema": {
               "type": "number"
             },
-            "example": "1609"
+            "example": "2260"
           },
           {
             "name": "id",
@@ -296,7 +332,7 @@
             "schema": {
               "type": "number"
             },
-            "example": "364"
+            "example": "519"
           },
           {
             "name": "Accept",
@@ -310,13 +346,16 @@
           }
         ],
         "responses": {
-          "204": {
-            "description": "No Content",
+          "200": {
+            "description": "OK",
             "content": {
-              "any": {
+              "text/html": {
               }
             },
             "headers": {
+              "Content-Type": {
+                "description": "text/html"
+              }
             }
           },
           "404": {
@@ -356,9 +395,11 @@
                 "examples": {
                   "get index": {
                     "summary": "get index",
-                    "value": [
+                    "value": {
+                      "data": [
 
-                    ]
+                      ]
+                    }
                   }
                 }
               }
@@ -395,7 +436,7 @@
               "examples": {
                 "valid params": {
                   "summary": "valid params",
-                  "value": "title=mediumaquamarine"
+                  "value": "title=lightsteelblue"
                 },
                 "short title": {
                   "summary": "short title",
@@ -403,7 +444,7 @@
                 },
                 "long title": {
                   "summary": "long title",
-                  "value": "title=Sint+ipsa+omnis+fuga+repudiandae+eaque+qui+repellat+mollitia.+Vel+debitis+dignissimos+aut+minus+suscipit+provident.+Alias+asperiores+placeat+deserunt+vitae+architecto+dolorum+cum+repellendus."
+                  "value": "title=Sapiente+ullam+autem+dolor+iusto+ipsum+modi+nihil.+Harum+earum+quam+doloremque+qui+sapiente+iusto+labore+vero.+Vero+molestiae+nulla+corrupti+aliquam+consectetur+quam+nam+magnam.+Voluptatibus+odit+pariatur+tenetur+sapiente+fuga+explicabo+eveniet+doloribus.+Itaque+quidem+blanditiis+enim+deleniti+repellat."
                 }
               }
             }
@@ -418,11 +459,26 @@
                   "valid params": {
                     "summary": "valid params",
                     "value": {
-                      "id": 2796,
-                      "title": "mediumaquamarine",
-                      "user_id": 4751,
-                      "created_at": "2022-05-19T19:44:43.208Z",
-                      "updated_at": "2022-05-19T19:44:43.208Z"
+                      "data": {
+                        "id": "3819",
+                        "type": "project",
+                        "attributes": {
+                          "title": "lightsteelblue"
+                        },
+                        "relationships": {
+                          "user": {
+                            "data": {
+                              "id": "6146",
+                              "type": "user"
+                            }
+                          },
+                          "tasks": {
+                            "data": [
+
+                            ]
+                          }
+                        }
+                      }
                     }
                   }
                 }
@@ -481,7 +537,7 @@
             "schema": {
               "type": "number"
             },
-            "example": "2797"
+            "example": "3820"
           },
           {
             "name": "Accept",
@@ -498,11 +554,29 @@
                   "existing project": {
                     "summary": "existing project",
                     "value": {
-                      "id": 2797,
-                      "title": "blueviolet",
-                      "user_id": 4754,
-                      "created_at": "2022-05-19T19:44:43.273Z",
-                      "updated_at": "2022-05-19T19:44:43.273Z"
+                      "data": {
+                        "id": "3820",
+                        "type": "project",
+                        "attributes": {
+                          "title": "hotpink"
+                        },
+                        "relationships": {
+                          "user": {
+                            "data": {
+                              "id": "6149",
+                              "type": "user"
+                            }
+                          },
+                          "tasks": {
+                            "data": [
+
+                            ]
+                          }
+                        }
+                      },
+                      "included": [
+
+                      ]
                     }
                   }
                 }
@@ -541,7 +615,7 @@
             "schema": {
               "type": "number"
             },
-            "example": "2798"
+            "example": "3821"
           },
           {
             "name": "Accept",
@@ -560,7 +634,7 @@
               "examples": {
                 "valid params": {
                   "summary": "valid params",
-                  "value": "title=limegreen"
+                  "value": "title=lightsalmon"
                 },
                 "short title": {
                   "summary": "short title",
@@ -568,7 +642,7 @@
                 },
                 "long title": {
                   "summary": "long title",
-                  "value": "title=Tempore+earum+culpa+fugit+aut.+Molestias+voluptatem+facere+molestiae+odio+ea+eius+recusandae+unde.+Excepturi+repellat+iure+non+praesentium+numquam+aut+error.+Repellendus+rem+cum+nulla+impedit+eaque."
+                  "value": "title=Magni+ipsa+reiciendis+quisquam+exercitationem+pariatur.+Cum+earum+hic+vitae+quia+maxime+aliquid.+Cumque+nihil+natus+consequatur+hic+fugiat+commodi.+Esse+vero+corrupti+tempora+nobis+pariatur+totam+natus+cumque."
                 }
               }
             }
@@ -578,24 +652,12 @@
           "200": {
             "description": "OK",
             "content": {
-              "application/json; charset=utf-8": {
-                "examples": {
-                  "valid params": {
-                    "summary": "valid params",
-                    "value": {
-                      "title": "limegreen",
-                      "user_id": 4756,
-                      "id": 2798,
-                      "created_at": "2022-05-19T19:44:43.313Z",
-                      "updated_at": "2022-05-19T19:44:43.336Z"
-                    }
-                  }
-                }
+              "text/html": {
               }
             },
             "headers": {
               "Content-Type": {
-                "description": "application/json; charset=utf-8"
+                "description": "text/html"
               }
             }
           },
@@ -656,7 +718,7 @@
             "schema": {
               "type": "number"
             },
-            "example": "2801"
+            "example": "3824"
           },
           {
             "name": "Accept",
@@ -670,13 +732,16 @@
           }
         ],
         "responses": {
-          "204": {
-            "description": "No Content",
+          "200": {
+            "description": "OK",
             "content": {
-              "any": {
+              "text/html": {
               }
             },
             "headers": {
+              "Content-Type": {
+                "description": "text/html"
+              }
             }
           },
           "404": {
@@ -708,7 +773,7 @@
             "schema": {
               "type": "number"
             },
-            "example": "2806"
+            "example": "3829"
           },
           {
             "name": "Accept",
@@ -727,7 +792,7 @@
               "examples": {
                 "valid params": {
                   "summary": "valid params",
-                  "value": "title=Sharable+intangible+standardization"
+                  "value": "title=Extended+web-enabled+help-desk"
                 },
                 "short title": {
                   "summary": "short title",
@@ -735,7 +800,7 @@
                 },
                 "long title": {
                   "summary": "long title",
-                  "value": "title=Tempora+dignissimos+repellendus+esse+labore+dolor+voluptatum.+Modi+est+at+sunt+iure+mollitia.+Voluptatem+non+magni+quas+mollitia+iure+quae+ipsa+illo.+Nesciunt+exercitationem+nobis+est+expedita+blanditiis+aspernatur+ratione.+Dignissimos+ipsam+nulla+eum+impedit+quod+ab+aperiam."
+                  "value": "title=Dolore+accusantium+minima+nostrum+nulla+fugiat+fuga+similique+at.+Expedita+ipsa+dolorum+distinctio+facilis+hic+adipisci.+Magnam+illum+veniam+ipsum+quod+tenetur."
                 }
               }
             }
@@ -750,14 +815,29 @@
                   "valid params": {
                     "summary": "valid params",
                     "value": {
-                      "id": 1616,
-                      "project_id": 2806,
-                      "title": "Sharable intangible standardization",
-                      "deadline": null,
-                      "position": 1,
-                      "completed": false,
-                      "created_at": "2022-05-19T19:44:43.549Z",
-                      "updated_at": "2022-05-19T19:44:43.549Z"
+                      "data": {
+                        "id": "2267",
+                        "type": "task",
+                        "attributes": {
+                          "title": "Extended web-enabled help-desk",
+                          "deadline": null,
+                          "position": 1,
+                          "completed": false
+                        },
+                        "relationships": {
+                          "project": {
+                            "data": {
+                              "id": "3829",
+                              "type": "project"
+                            }
+                          },
+                          "comments": {
+                            "data": [
+
+                            ]
+                          }
+                        }
+                      }
                     }
                   }
                 }
@@ -838,7 +918,7 @@
             "schema": {
               "type": "number"
             },
-            "example": "2809"
+            "example": "3832"
           },
           {
             "name": "id",
@@ -846,7 +926,7 @@
             "schema": {
               "type": "number"
             },
-            "example": "1617"
+            "example": "2268"
           },
           {
             "name": "Accept",
@@ -863,14 +943,32 @@
                   "valid": {
                     "summary": "valid",
                     "value": {
-                      "id": 1617,
-                      "project_id": 2809,
-                      "title": "User-centric client-server info-mediaries",
-                      "deadline": null,
-                      "position": 1,
-                      "completed": false,
-                      "created_at": "2022-05-19T19:44:43.633Z",
-                      "updated_at": "2022-05-19T19:44:43.633Z"
+                      "data": {
+                        "id": "2268",
+                        "type": "task",
+                        "attributes": {
+                          "title": "Assimilated fault-tolerant approach",
+                          "deadline": null,
+                          "position": 1,
+                          "completed": false
+                        },
+                        "relationships": {
+                          "project": {
+                            "data": {
+                              "id": "3832",
+                              "type": "project"
+                            }
+                          },
+                          "comments": {
+                            "data": [
+
+                            ]
+                          }
+                        }
+                      },
+                      "included": [
+
+                      ]
                     }
                   }
                 }
@@ -909,7 +1007,7 @@
             "schema": {
               "type": "number"
             },
-            "example": "2812"
+            "example": "3835"
           },
           {
             "name": "id",
@@ -917,7 +1015,7 @@
             "schema": {
               "type": "number"
             },
-            "example": "1619"
+            "example": "2270"
           },
           {
             "name": "Accept",
@@ -936,7 +1034,7 @@
               "examples": {
                 "valid": {
                   "summary": "valid",
-                  "value": "title=Persistent+clear-thinking+conglomeration"
+                  "value": "title=Programmable+grid-enabled+workforce"
                 },
                 "short title": {
                   "summary": "short title",
@@ -944,7 +1042,7 @@
                 },
                 "long title": {
                   "summary": "long title",
-                  "value": "title=Eveniet+accusamus+ullam+eligendi+libero.+Atque+consequuntur+aliquid+nisi+error+ex+maiores+libero+eveniet.+Odit+illo+nulla+doloribus+dolor+sed+distinctio.+Impedit+ea+non+cupiditate+quaerat+enim+quod+voluptatum+animi.+Ipsam+architecto+consequuntur+ipsum+aliquid+odio+occaecati+quis."
+                  "value": "title=Alias+tempore+asperiores+numquam+laborum+magnam+dolorum+ipsa+corrupti.+Eaque+provident+sed+recusandae+voluptates+minima.+In+fugit+vitae+possimus+architecto.+Qui+veritatis+accusamus+perspiciatis+quod+quas+dolore+architecto."
                 }
               }
             }
@@ -954,27 +1052,12 @@
           "200": {
             "description": "OK",
             "content": {
-              "application/json; charset=utf-8": {
-                "examples": {
-                  "valid": {
-                    "summary": "valid",
-                    "value": {
-                      "title": "Persistent clear-thinking conglomeration",
-                      "project_id": 2812,
-                      "deadline": null,
-                      "position": 1,
-                      "completed": false,
-                      "id": 1619,
-                      "created_at": "2022-05-19T19:44:43.710Z",
-                      "updated_at": "2022-05-19T19:44:43.730Z"
-                    }
-                  }
-                }
+              "text/html": {
               }
             },
             "headers": {
               "Content-Type": {
-                "description": "application/json; charset=utf-8"
+                "description": "text/html"
               }
             }
           },
@@ -1047,7 +1130,7 @@
             "schema": {
               "type": "number"
             },
-            "example": "2817"
+            "example": "3840"
           },
           {
             "name": "id",
@@ -1055,7 +1138,7 @@
             "schema": {
               "type": "number"
             },
-            "example": "1623"
+            "example": "2274"
           },
           {
             "name": "Accept",
@@ -1069,13 +1152,16 @@
           }
         ],
         "responses": {
-          "204": {
-            "description": "No Content",
+          "200": {
+            "description": "OK",
             "content": {
-              "any": {
+              "text/html": {
               }
             },
             "headers": {
+              "Content-Type": {
+                "description": "text/html"
+              }
             }
           },
           "404": {
@@ -1161,12 +1247,20 @@
                   "create user": {
                     "summary": "create user",
                     "value": {
-                      "id": 4781,
-                      "email": "examle@example.com",
-                      "password_digest": "$2a$04$yJzEAxVaPNAqy9oGeFbyOumervj2i.zc6HMjKBxcVF8XrsaSctgtq",
-                      "created_at": "2022-05-19T19:44:43.948Z",
-                      "updated_at": "2022-05-19T19:44:43.948Z",
-                      "token": null
+                      "data": {
+                        "id": "6176",
+                        "type": "user",
+                        "attributes": {
+                          "email": "examle@example.com"
+                        },
+                        "relationships": {
+                          "projects": {
+                            "data": [
+
+                            ]
+                          }
+                        }
+                      }
                     }
                   }
                 }

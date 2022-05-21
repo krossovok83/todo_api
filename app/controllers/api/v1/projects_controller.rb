@@ -20,7 +20,7 @@ module Api
 
       def show
         run Project::Operation::Show do
-          render json: @model and return
+          render json: ProjectSerializer.new(@model, { include: [:tasks] }).serializable_hash.to_json and return
         end
         head :not_found
       end

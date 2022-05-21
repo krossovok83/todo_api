@@ -7,7 +7,8 @@ module Api
 
       def create
         run Comment::Operation::Create do
-          render(json: CommentSerializer.new(@model).serializable_hash.to_json, status: :created) and return
+          model_json = TaskSerializer.new(@model.task, { include: [:comments] }).serializable_hash.to_json
+          render(json: model_json, status: :created) and return
         end
         render json: { errors: @form.errors.full_messages }, status: result[:status]
       end

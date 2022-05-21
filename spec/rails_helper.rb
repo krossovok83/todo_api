@@ -4,7 +4,7 @@
 require 'spec_helper'
 require 'active_support/isolated_execution_state'
 require 'dox'
-require 'json_matchers'
+require 'json_matchers/rspec'
 ENV['RAILS_ENV'] ||= 'test'
 require_relative '../config/environment'
 # Prevent database truncation if the environment is production
@@ -88,3 +88,5 @@ Shoulda::Matchers.configure do |config|
     with.library :rails
   end
 end
+
+JsonMatchers.schema_root = 'spec/support/api/schemas'

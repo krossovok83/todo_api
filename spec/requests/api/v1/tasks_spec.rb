@@ -41,6 +41,7 @@ RSpec.describe Api::V1::TasksController, type: :request do
       it 'valid params', :dox do
         post "/api/v1/projects/#{current_project.id}/tasks", params: FactoryBot.attributes_for(:task)
         expect(response).to have_http_status :created
+        expect(response).to match_json_schema('create_task')
       end
 
       it 'short title', :dox do
@@ -65,6 +66,7 @@ RSpec.describe Api::V1::TasksController, type: :request do
       it 'valid', :dox do
         get "/api/v1/projects/#{current_project.id}/tasks/#{task.id}"
         expect(response).to have_http_status :ok
+        expect(response).to match_json_schema('show_task')
       end
 
       it 'invalid task', :dox do

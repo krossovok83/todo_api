@@ -43,6 +43,7 @@ RSpec.describe Api::V1::ProjectsController, type: :request do
       it 'get index', :dox do
         get '/api/v1/projects'
         expect(response).to have_http_status :ok
+        expect(response).to match_json_schema('index_projects')
       end
     end
 
@@ -52,6 +53,7 @@ RSpec.describe Api::V1::ProjectsController, type: :request do
       it 'valid params', :dox do
         post '/api/v1/projects', params: FactoryBot.attributes_for(:project)
         expect(response).to have_http_status :created
+        expect(response).to match_json_schema('create_project')
       end
 
       it 'short title', :dox do
@@ -73,6 +75,7 @@ RSpec.describe Api::V1::ProjectsController, type: :request do
       it 'existing project', :dox do
         get "/api/v1/projects/#{project.id}"
         expect(response).to have_http_status :ok
+        expect(response).to match_json_schema('show_project')
       end
 
       it 'non-existent project', :dox do
