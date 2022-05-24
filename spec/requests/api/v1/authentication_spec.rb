@@ -1,36 +1,43 @@
 # frozen_string_literal: true
 
-RSpec.describe Api::V1::AuthenticationController, type: :request do
-  let(:user) { FactoryBot.create(:user) }
-  describe 'POST /auth/login' do
-    include Docs::V1::Authentication::Login
-    it 'login', :dox do
-      post '/api/v1/auth/login', params: { email: user.email,
-                                           password: 'password' }
-      expect(response).to have_http_status :ok
-    end
+require 'swagger_helper'
 
-    it 'invalid user', :dox do
-      post '/api/v1/auth/login', params: { email: "#{user.email}bad",
-                                           password: 'password' }
-      expect(response).to have_http_status :unauthorized
+RSpec.describe Api::V1::AuthenticationController, type: :request do
+  let(:current_user) { FactoryBot.create(:user) }
+
+  path '/api/v1/auth/login' do
+    post 'User LogIn' do
+      tags 'Authentications'
+      parameter name: :user, in: :body, schema: { '$ref' => '#/components/schemas/new_user' }
+      response '200', :ok do
+        let(:user) { { email: current_user.email, password: current_user.password } }
+        run_test!
+      end
+
+      response '401', :unauthorized do
+        let(:user) { { title: 'some@email', password: current_user.password } }
+        run_test!
+      end
     end
   end
 
-  describe 'DELETE /auth/logout' do
-    include Docs::V1::Authentication::Logout
-    it 'logout', :dox do
-      post '/api/v1/auth/login', params: { email: user.email,
-                                           password: 'password' }
-      token = JSON.parse(response.body)['token']
-      delete '/api/v1/auth/logout', headers: { Authorization: "Bearer #{token}" }
-      expect(response).to have_http_status :ok
-    end
+  path '/api/v1/auth/logout' do
+    delete 'User LogOut' do
+      tags 'Authentications'
+      security [Bearer: {}]
 
-    it 'logout non-authorized user', :dox do
-      token = 'some_token'
-      delete '/api/v1/auth/logout', headers: { Authorization: "Bearer #{token}" }
-      expect(response).to have_http_status :unauthorized
+      response '200', :ok do
+        before do
+          post '/api/v1/auth/login', params: { email: current_user.email, password: current_user.password }
+        end
+        let(:Authorization) { "Bearer #{User.first.token}" }
+        run_test!
+      end
+
+      response '401', :unauthorized do
+        let(:Authorization) { 'Bearer invalid' }
+        run_test!
+      end
     end
   end
 end

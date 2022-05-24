@@ -1,73 +1,57 @@
 # frozen_string_literal: true
 
+require 'swagger_helper'
+
 RSpec.describe Api::V1::UsersController, type: :request do
-  include Docs::V1::Users::Api
-
   describe 'POST /users' do
-    include Docs::V1::Users::Create
+    path '/api/v1/users' do
+      post 'Create User' do
+        tags 'Users'
+        parameter name: :user, in: :body, schema: { '$ref' => '#/components/schemas/new_user' }
 
-    it 'create user', :dox do
-      post '/api/v1/users', params: { email: 'examle@example.com',
-                                      password: 'password',
-                                      password_confirmation: 'password' }
-      expect(response.content_type).to eq('application/json; charset=utf-8')
-      expect(response).to have_http_status :created
-    end
+        response '201', :created do
+          let(:user) { FactoryBot.attributes_for(:user) }
+          run_test!
+        end
 
-    it 'email is blank', :dox do
-      post '/api/v1/users', params: { password: 'password',
-                                      password_confirmation: 'password' }
-      expect(response.body).to include("Email can't be blank")
-      expect(response).to have_http_status :unprocessable_entity
-    end
+        response '422', 'Email Is Blank' do
+          let(:user) { FactoryBot.attributes_for(:user, email: '') }
+          run_test!
+        end
 
-    it 'email short', :dox do
-      post '/api/v1/users', params: { email: 'e@',
-                                      password: 'password',
-                                      password_confirmation: 'password' }
-      expect(response.body).to include('Email is too short (minimum is 3 characters)')
-      expect(response).to have_http_status :unprocessable_entity
-    end
+        response '422', 'Email Is Short' do
+          let(:user) { FactoryBot.attributes_for(:user, email: 'e@') }
+          run_test!
+        end
 
-    it 'email long', :dox do
-      post '/api/v1/users', params: { email: 'qqqqqqqqqqqqqqqqqqq@wwwwwwwwwweeeeeeeeeerrrrrrrrrrtttttttttt',
-                                      password: 'password',
-                                      password_confirmation: 'password' }
-      expect(response.body).to include('Email is too long (maximum is 50 characters)')
-      expect(response).to have_http_status :unprocessable_entity
-    end
+        response '422', 'Email Is Long' do
+          let(:user) { FactoryBot.attributes_for(:user, email: ::FFaker::Lorem.paragraph) }
+          run_test!
+        end
 
-    it 'without confirmation', :dox do
-      post '/api/v1/users', params: { email: 'examle1@example.com',
-                                      password: 'password' }
-      expect(response.body).to include('Password mismatch')
-      expect(response).to have_http_status :unprocessable_entity
-    end
+        response '422', 'Without Password Confirmation' do
+          let(:user) { FactoryBot.attributes_for(:user, password_confirmation: '') }
+          run_test!
+        end
 
-    it 'not unique mail', :dox do
-      post '/api/v1/users', params: { email: 'examle@example.com',
-                                      password: 'password',
-                                      password_confirmation: 'password' }
-      post '/api/v1/users', params: { email: 'examle@example.com',
-                                      password: 'password',
-                                      password_confirmation: 'password' }
-      expect(response.body).to include('Email has already been taken')
-      expect(response).to have_http_status :unprocessable_entity
-    end
+        response '422', 'Without Password' do
+          let(:user) { FactoryBot.attributes_for(:user, password: '') }
+          run_test!
+        end
 
-    it 'without password', :dox do
-      post '/api/v1/users', params: { email: 'examle@example.com',
-                                      password_confirmation: 'password' }
-      expect(response.body).to include('Password is invalid')
-      expect(response).to have_http_status :unprocessable_entity
-    end
+        response '422', 'Password Length not 8 chars' do
+          let(:user) { FactoryBot.attributes_for(:user, password: 'pass', password_confirmation: 'pass') }
+          run_test!
+        end
 
-    it 'password length not 8 chars', :dox do
-      post '/api/v1/users', params: { email: 'examle@example.com',
-                                      password: 'pass',
-                                      password_confirmation: 'pass' }
-      expect(response.body).to include('Password is the wrong length (should be 8 characters)')
-      expect(response).to have_http_status :unprocessable_entity
+        response '422', 'Not Unique Email' do
+          before do
+            post '/api/v1/users', params: FactoryBot.attributes_for(:user)
+          end
+          let(:user) { FactoryBot.attributes_for(:user) }
+          run_test!
+        end
+      end
     end
   end
 end

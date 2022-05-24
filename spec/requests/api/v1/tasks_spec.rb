@@ -1,130 +1,195 @@
 # frozen_string_literal: true
 
-RSpec.describe Api::V1::TasksController, type: :request do
-  include Docs::V1::Tasks::Api
+require 'swagger_helper'
 
+RSpec.describe Api::V1::TasksController, type: :request do
   let(:current_user) { FactoryBot.create(:user) }
   let(:current_project) { FactoryBot.create(:project, user: current_user) }
-  let(:task) { FactoryBot.create(:task, project: current_project) }
+  let(:current_task) { FactoryBot.create(:task, project: current_project) }
+  before(:each) do
+    post '/api/v1/auth/login', params: { email: current_user.email, password: current_user.password }
+  end
 
-  describe 'not authorized' do
-    it 'create' do
-      post "/api/v1/projects/#{current_project.id}/tasks"
-      expect(response).to have_http_status :unauthorized
-    end
+  describe 'create' do
+    path '/api/v1/projects/{project_id}/tasks' do
+      post 'Create Task' do
+        tags 'Tasks'
+        security [Bearer: {}]
+        parameter name: :project_id, in: :path
+        parameter name: :task, in: :body, schema: { '$ref' => '#/components/schemas/new_task' }
 
-    it 'show' do
-      get "/api/v1/projects/#{current_project.id}/tasks/#{task.id}"
-      expect(response).to have_http_status :unauthorized
-    end
+        response '201', :created do
+          let(:Authorization) { "Bearer #{User.first.token}" }
+          let(:project_id) { current_project.id }
+          let(:task) { FactoryBot.attributes_for(:task, project: current_project) }
+          run_test!
+        end
 
-    it 'update' do
-      put "/api/v1/projects/#{current_project.id}/tasks/#{task.id}"
-      expect(response).to have_http_status :unauthorized
-    end
+        response '404', 'Not Found Project' do
+          let(:Authorization) { "Bearer #{User.first.token}" }
+          let(:project_id) { 'invalid' }
+          let(:task) { FactoryBot.attributes_for(:task, project: current_project) }
+          run_test!
+        end
 
-    it 'delete' do
-      delete "/api/v1/projects/#{current_project.id}/tasks/#{task.id}"
-      expect(response).to have_http_status :unauthorized
+        response '422', 'Short Task Title' do
+          let(:Authorization) { "Bearer #{User.first.token}" }
+          let(:project_id) { current_project.id }
+          let(:task) { { title: 'q' } }
+          run_test!
+        end
+
+        response '422', 'Long Task Title' do
+          let(:Authorization) { "Bearer #{User.first.token}" }
+          let(:project_id) { current_project.id }
+          let(:task) { { title: ::FFaker::Lorem.paragraph } }
+          run_test!
+        end
+
+        response '401', :unauthorized do
+          let(:Authorization) { 'Bearer invalid' }
+          let(:project_id) { current_project.id }
+          let(:task) { FactoryBot.attributes_for(:task, project: current_project) }
+          run_test!
+        end
+      end
     end
   end
 
-  describe 'authorized' do
-    before(:each) do
-      allow_any_instance_of(ApplicationController).to receive(:authorize).and_return(true)
-      allow_any_instance_of(ApplicationController).to receive(:current_user).and_return(current_user)
-    end
+  describe 'show' do
+    path '/api/v1/projects/{project_id}/tasks/{id}' do
+      get 'Show Task' do
+        tags 'Tasks'
+        security [Bearer: {}]
+        parameter name: :project_id, in: :path
+        parameter name: :id, in: :path
 
-    describe 'create' do
-      include Docs::V1::Tasks::Create
+        response '200', :ok do
+          let(:Authorization) { "Bearer #{User.first.token}" }
+          let(:project_id) { current_project.id }
+          let(:id) { current_task.id }
+          run_test!
+        end
 
-      it 'valid params', :dox do
-        post "/api/v1/projects/#{current_project.id}/tasks", params: FactoryBot.attributes_for(:task)
-        expect(response).to have_http_status :created
-        expect(response).to match_json_schema('create_task')
-      end
+        response '404', 'Not Found Project' do
+          let(:Authorization) { "Bearer #{User.first.token}" }
+          let(:project_id) { 'invalid' }
+          let(:id) { current_task.id }
+          run_test!
+        end
 
-      it 'short title', :dox do
-        post "/api/v1/projects/#{current_project.id}/tasks", params: { title: 'q' }
-        expect(response).to have_http_status :unprocessable_entity
-      end
+        response '404', 'Not Found Task' do
+          let(:Authorization) { "Bearer #{User.first.token}" }
+          let(:project_id) { current_project.id }
+          let(:id) { 'invalid' }
+          run_test!
+        end
 
-      it 'long title', :dox do
-        post "/api/v1/projects/#{current_project.id}/tasks", params: { title: ::FFaker::Lorem.paragraph }
-        expect(response).to have_http_status :unprocessable_entity
-      end
-
-      it 'non-existent project', :dox do
-        post '/api/v1/projects/some_project/tasks'
-        expect(response).to have_http_status :not_found
-      end
-    end
-
-    describe 'show' do
-      include Docs::V1::Tasks::Show
-
-      it 'valid', :dox do
-        get "/api/v1/projects/#{current_project.id}/tasks/#{task.id}"
-        expect(response).to have_http_status :ok
-        expect(response).to match_json_schema('show_task')
-      end
-
-      it 'invalid task', :dox do
-        get "/api/v1/projects/#{current_project.id}/tasks/some_id"
-        expect(response).to have_http_status :not_found
-      end
-
-      it 'invalid project', :dox do
-        get "/api/v1/projects/some_id/tasks/#{task.id}"
-        expect(response).to have_http_status :not_found
+        response '401', :unauthorized do
+          let(:Authorization) { 'Bearer invalid' }
+          let(:project_id) { current_project.id }
+          let(:id) { current_task.id }
+          run_test!
+        end
       end
     end
+  end
 
-    describe 'update' do
-      include Docs::V1::Tasks::Update
+  describe 'update' do
+    path '/api/v1/projects/{project_id}/tasks/{id}' do
+      put 'Show Task' do
+        tags 'Tasks'
+        security [Bearer: {}]
+        parameter name: :project_id, in: :path
+        parameter name: :id, in: :path
+        parameter name: :task, in: :body, schema: { '$ref' => '#/components/schemas/task' }
 
-      it 'valid', :dox do
-        put "/api/v1/projects/#{current_project.id}/tasks/#{task.id}", params: FactoryBot.attributes_for(:task)
-        expect(response).to have_http_status :ok
-      end
+        response '200', :ok do
+          let(:Authorization) { "Bearer #{User.first.token}" }
+          let(:project_id) { current_project.id }
+          let(:id) { current_task.id }
+          let(:task) { FactoryBot.attributes_for(:task) }
+          run_test!
+        end
 
-      it 'short title', :dox do
-        put "/api/v1/projects/#{current_project.id}/tasks/#{task.id}", params: { title: 'q' }
-        expect(response).to have_http_status :unprocessable_entity
-      end
+        response '422', 'Short Title' do
+          let(:Authorization) { "Bearer #{User.first.token}" }
+          let(:project_id) { current_project.id }
+          let(:id) { current_task.id }
+          let(:task) { { title: 'q' } }
+          run_test!
+        end
 
-      it 'long title', :dox do
-        put "/api/v1/projects/#{current_project.id}/tasks/#{task.id}", params: { title: ::FFaker::Lorem.paragraph }
-        expect(response).to have_http_status :unprocessable_entity
-      end
+        response '422', 'Long Title' do
+          let(:Authorization) { "Bearer #{User.first.token}" }
+          let(:project_id) { current_project.id }
+          let(:id) { current_task.id }
+          let(:task) { { title: ::FFaker::Lorem.paragraph } }
+          run_test!
+        end
 
-      it 'non-existent project', :dox do
-        put "/api/v1/projects/some_id/tasks/#{task.id}"
-        expect(response).to have_http_status :not_found
-      end
+        response '404', 'Not Found Project' do
+          let(:Authorization) { "Bearer #{User.first.token}" }
+          let(:project_id) { 'invalid' }
+          let(:id) { current_task.id }
+          let(:task) { FactoryBot.attributes_for(:task) }
+          run_test!
+        end
 
-      it 'non-existent task', :dox do
-        put "/api/v1/projects/#{current_project.id}/tasks/some_id"
-        expect(response).to have_http_status :not_found
+        response '404', 'Not Found Task' do
+          let(:Authorization) { "Bearer #{User.first.token}" }
+          let(:project_id) { current_project.id }
+          let(:id) { 'invaild' }
+          let(:task) { FactoryBot.attributes_for(:task) }
+          run_test!
+        end
+
+        response '401', :unauthorized do
+          let(:Authorization) { 'Bearer invalid' }
+          let(:project_id) { current_project.id }
+          let(:id) { current_task.id }
+          let(:task) { FactoryBot.attributes_for(:task) }
+          run_test!
+        end
       end
     end
+  end
 
-    describe 'destroy' do
-      include Docs::V1::Tasks::Destroy
+  describe 'destroy' do
+    path '/api/v1/projects/{project_id}/tasks/{id}' do
+      delete 'Destroy Task' do
+        tags 'Tasks'
+        security [Bearer: {}]
+        parameter name: :project_id, in: :path
+        parameter name: :id, in: :path
 
-      it 'valid params', :dox do
-        delete "/api/v1/projects/#{current_project.id}/tasks/#{task.id}"
-        expect(response).to have_http_status :ok
-      end
+        response '200', :ok do
+          let(:Authorization) { "Bearer #{User.first.token}" }
+          let(:project_id) { current_project.id }
+          let(:id) { current_task.id }
+          run_test!
+        end
 
-      it 'non-existent project', :dox do
-        delete "/api/v1/projects/some_id/tasks/#{task.id}"
-        expect(response).to have_http_status :not_found
-      end
+        response '404', 'Not Found Project' do
+          let(:Authorization) { "Bearer #{User.first.token}" }
+          let(:project_id) { 'invalid' }
+          let(:id) { current_task.id }
+          run_test!
+        end
 
-      it 'non-existent task', :dox do
-        delete "/api/v1/projects/#{current_project.id}/tasks/some_id"
-        expect(response).to have_http_status :not_found
+        response '404', 'Not Found Task' do
+          let(:Authorization) { "Bearer #{User.first.token}" }
+          let(:project_id) { current_project.id }
+          let(:id) { 'invalid' }
+          run_test!
+        end
+
+        response '401', :unauthorized do
+          let(:Authorization) { 'Bearer invalid' }
+          let(:project_id) { current_project.id }
+          let(:id) { current_task.id }
+          run_test!
+        end
       end
     end
   end

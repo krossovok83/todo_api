@@ -3,8 +3,6 @@
 # This file is copied to spec/ when you run 'rails generate rspec:install'
 require 'spec_helper'
 require 'active_support/isolated_execution_state'
-require 'dox'
-require 'json_matchers/rspec'
 ENV['RAILS_ENV'] ||= 'test'
 require_relative '../config/environment'
 # Prevent database truncation if the environment is production
@@ -66,20 +64,17 @@ RSpec.configure do |config|
   config.filter_rails_from_backtrace!
   # arbitrary gems may also be filtered via:
   # config.filter_gems_from_backtrace("gem name")
-  config.after(:each, :dox) do |conf|
-    conf.metadata[:request] = request
-    conf.metadata[:response] = response
+
+  config.before(:suite) do
+    DatabaseCleaner.strategy = :transaction
+    DatabaseCleaner.clean_with(:truncation)
   end
-end
 
-Dir[Rails.root.join('spec/docs/**/*.rb')].each { |file| require file }
-
-Dox.configure do |config|
-  config.api_version = '1.0'
-  config.title = 'API ToDo'
-  config.header_description = 'header.md'
-  config.descriptions_location = Rails.root.join('spec/docs/v1/descriptions')
-  config.headers_whitelist = %w[Accept X-Auth-Token]
+  config.around(:each) do |example|
+    DatabaseCleaner.cleaning do
+      example.run
+    end
+  end
 end
 
 Shoulda::Matchers.configure do |config|
@@ -88,5 +83,3 @@ Shoulda::Matchers.configure do |config|
     with.library :rails
   end
 end
-
-JsonMatchers.schema_root = 'spec/support/api/schemas'

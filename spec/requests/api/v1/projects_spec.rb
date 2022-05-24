@@ -1,128 +1,163 @@
 # frozen_string_literal: true
 
-RSpec.describe Api::V1::ProjectsController, type: :request do
-  include Docs::V1::Projects::Api
+require 'swagger_helper'
 
-  describe 'not authorized' do
-    it 'index' do
-      get '/api/v1/projects'
-      expect(response).to have_http_status :unauthorized
-    end
+RSpec.describe Api::V1::ProjectsController do
+  let(:current_user) { FactoryBot.create(:user) }
+  before(:each) do
+    post '/api/v1/auth/login', params: { email: current_user.email, password: current_user.password }
+  end
 
-    it 'create' do
-      post '/api/v1/projects'
-      expect(response).to have_http_status :unauthorized
-    end
+  describe 'index' do
+    path '/api/v1/projects' do
+      get 'GET Index Projects' do
+        tags 'Projects'
+        security [Bearer: {}]
+        response '200', :ok do
+          let(:Authorization) { "Bearer #{User.first.token}" }
+          schema type: :object,
+                 properties: {
+                   collection: {
+                     type: :array,
+                     items: { '$ref' => '#/components/schemas/project' }
+                   }
+                 }
+          run_test!
+        end
 
-    it 'show' do
-      get '/api/v1/projects/1'
-      expect(response).to have_http_status :unauthorized
-    end
-
-    it 'update' do
-      put '/api/v1/projects/1'
-      expect(response).to have_http_status :unauthorized
-    end
-
-    it 'delete' do
-      get '/api/v1/projects/1'
-      expect(response).to have_http_status :unauthorized
+        response '401', :unauthorized do
+          let(:Authorization) { 'Bearer invalid' }
+          run_test!
+        end
+      end
     end
   end
 
-  describe 'authorized' do
-    let(:current_user) { FactoryBot.create(:user) }
-    before(:each) do
-      allow_any_instance_of(ApplicationController).to receive(:authorize).and_return(true)
-      allow_any_instance_of(ApplicationController).to receive(:current_user).and_return(current_user)
-    end
+  describe 'create' do
+    path '/api/v1/projects' do
+      post 'Create Project' do
+        tags 'Projects'
+        security [Bearer: {}]
+        parameter name: :project, in: :body, schema: { '$ref' => '#/components/schemas/new_project' }
+        let(:Authorization) { "Bearer #{User.first.token}" }
 
-    describe 'index' do
-      include Docs::V1::Projects::Index
+        response '201', :created do
+          let(:project) { FactoryBot.attributes_for(:project) }
+          run_test!
+        end
 
-      it 'get index', :dox do
-        get '/api/v1/projects'
-        expect(response).to have_http_status :ok
-        expect(response).to match_json_schema('index_projects')
+        response '422', 'Short Title' do
+          let(:project) { { title: 'q' } }
+          run_test!
+        end
+
+        response '422', 'Long Title' do
+          let(:project) { { title: ::FFaker::Lorem.paragraph } }
+          run_test!
+        end
+
+        response '401', :unauthorized do
+          let(:Authorization) { 'Bearer invalid' }
+          let(:project) { FactoryBot.attributes_for(:project) }
+          run_test!
+        end
       end
     end
+  end
 
-    describe 'create' do
-      include Docs::V1::Projects::Create
+  describe 'show' do
+    path '/api/v1/projects/{id}' do
+      get 'Show Project' do
+        tags 'Projects'
+        security [Bearer: {}]
+        parameter name: :id, in: :path, schema: { '$ref' => '#/components/schemas/project' }
+        let(:Authorization) { "Bearer #{User.first.token}" }
 
-      it 'valid params', :dox do
-        post '/api/v1/projects', params: FactoryBot.attributes_for(:project)
-        expect(response).to have_http_status :created
-        expect(response).to match_json_schema('create_project')
-      end
+        response '200', :ok do
+          let(:id) { FactoryBot.create(:project, user: current_user).id }
+          run_test!
+        end
 
-      it 'short title', :dox do
-        post '/api/v1/projects', params: { title: 'q' }
-        expect(response).to have_http_status :unprocessable_entity
-      end
+        response '404', 'Not Found Project' do
+          let(:id) { 'invalid' }
+          run_test!
+        end
 
-      it 'long title', :dox do
-        post '/api/v1/projects', params: { title: ::FFaker::Lorem.paragraph }
-        expect(response).to have_http_status :unprocessable_entity
-      end
-    end
-
-    describe 'show' do
-      include Docs::V1::Projects::Show
-
-      let(:project) { FactoryBot.create(:project, user: current_user) }
-
-      it 'existing project', :dox do
-        get "/api/v1/projects/#{project.id}"
-        expect(response).to have_http_status :ok
-        expect(response).to match_json_schema('show_project')
-      end
-
-      it 'non-existent project', :dox do
-        get '/api/v1/projects/some_id'
-        expect(response).to have_http_status :not_found
+        response '401', :unauthorized do
+          let(:Authorization) { 'Bearer invalid' }
+          let(:id) { FactoryBot.create(:project, user: current_user).id }
+          run_test!
+        end
       end
     end
+  end
 
-    describe 'update' do
-      include Docs::V1::Projects::Update
+  describe 'update' do
+    path '/api/v1/projects/{id}' do
+      put 'Update Project' do
+        tags 'Projects'
+        security [Bearer: {}]
+        parameter name: :id, in: :path, type: :integer
+        parameter name: :project, in: :body, schema: { '$ref' => '#/components/schemas/project' }
+        let(:Authorization) { "Bearer #{User.first.token}" }
 
-      let(:project) { FactoryBot.create(:project, user: current_user) }
+        response '200', :ok do
+          let(:id) { FactoryBot.create(:project, user: current_user).id }
+          let(:project) { FactoryBot.attributes_for(:project) }
+          run_test!
+        end
 
-      it 'valid params', :dox do
-        put "/api/v1/projects/#{project.id}", params: FactoryBot.attributes_for(:project)
-        expect(response).to have_http_status :ok
-      end
+        response '404', :not_found do
+          let(:id) { 'invalid' }
+          let(:project) { FactoryBot.attributes_for(:project) }
+          run_test!
+        end
 
-      it 'short title', :dox do
-        put "/api/v1/projects/#{project.id}", params: { title: 'q' }
-        expect(response).to have_http_status :unprocessable_entity
-      end
+        response '422', 'Long Title' do
+          let(:id) { FactoryBot.create(:project, user: current_user).id }
+          let(:project) { { title: ::FFaker::Lorem.paragraph } }
+          run_test!
+        end
 
-      it 'long title', :dox do
-        put "/api/v1/projects/#{project.id}", params: { title: ::FFaker::Lorem.paragraph }
-        expect(response).to have_http_status :unprocessable_entity
-      end
+        response '422', 'Short Title' do
+          let(:id) { FactoryBot.create(:project, user: current_user).id }
+          let(:project) { { title: 'q' } }
+          run_test!
+        end
 
-      it 'non-existent project', :dox do
-        put '/api/v1/projects/some_id'
-        expect(response).to have_http_status :not_found
+        response '401', :unauthorized do
+          let(:Authorization) { 'Bearer invalid' }
+          let(:id) { FactoryBot.create(:project, user: current_user).id }
+          let(:project) { FactoryBot.attributes_for(:project) }
+          run_test!
+        end
       end
     end
+  end
 
-    describe 'destroy' do
-      include Docs::V1::Projects::Destroy
+  describe 'destroy' do
+    path '/api/v1/projects/{id}' do
+      delete 'Destroy Project' do
+        tags 'Projects'
+        security [Bearer: {}]
+        parameter name: :id, in: :path, type: :integer
+        let(:Authorization) { "Bearer #{User.first.token}" }
 
-      let(:project) { FactoryBot.create(:project, user: current_user) }
+        response '200', :ok do
+          let(:id) { FactoryBot.create(:project, user: current_user).id }
+          run_test!
+        end
 
-      it 'valid params', :dox do
-        delete "/api/v1/projects/#{project.id}"
-        expect(response).to have_http_status :ok
-      end
+        response '404', :not_found do
+          let(:id) { 'invalid' }
+          run_test!
+        end
 
-      it 'non-existent project', :dox do
-        delete '/api/v1/projects/some_id'
-        expect(response).to have_http_status :not_found
+        response '401', :unauthorized do
+          let(:Authorization) { 'Bearer invalid' }
+          let(:id) { FactoryBot.create(:project, user: current_user).id }
+          run_test!
+        end
       end
     end
   end

@@ -2,6 +2,6 @@
 
 FactoryBot.define do
   factory :task do
-    title { ::FFaker::Company.catch_phrase }
+    title { ::FFaker::AnimalUS.common_name }
   end
 end

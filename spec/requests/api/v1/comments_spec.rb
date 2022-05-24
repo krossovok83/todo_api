@@ -1,75 +1,124 @@
 # frozen_string_literal: true
 
-RSpec.describe Api::V1::CommentsController, type: :request do
-  include Docs::V1::Comments::Api
+require 'swagger_helper'
 
+RSpec.describe Api::V1::CommentsController, type: :request do
   let(:current_user) { FactoryBot.create(:user) }
   let(:current_project) { FactoryBot.create(:project, user: current_user) }
   let(:current_task) { FactoryBot.create(:task, project: current_project) }
-  let(:comment) { FactoryBot.create(:comment, task: current_task) }
+  let(:current_comment) { FactoryBot.create(:comment, task: current_task) }
+  before(:each) do
+    post '/api/v1/auth/login', params: { email: current_user.email, password: current_user.password }
+  end
 
-  describe 'not authorized' do
-    it 'create' do
-      post "/api/v1/projects/#{current_project.id}/tasks/#{current_task.id}/comments"
-      expect(response).to have_http_status :unauthorized
-    end
+  describe 'create' do
+    path '/api/v1/projects/{project_id}/tasks/{task_id}/comments' do
+      post 'Create Comment' do
+        tags 'Comments'
+        security [Bearer: {}]
+        parameter name: :project_id, in: :path
+        parameter name: :task_id, in: :path
+        parameter name: :comment, in: :body, schema: { '$ref' => '#/components/schemas/new_comment' }
 
-    it 'delete' do
-      delete "/api/v1/projects/#{current_project.id}/tasks/#{current_task.id}/comments/#{comment.id}"
-      expect(response).to have_http_status :unauthorized
+        response '201', :created do
+          let(:Authorization) { "Bearer #{User.first.token}" }
+          let(:project_id) { current_project.id }
+          let(:task_id) { current_task.id }
+          let(:comment) { FactoryBot.attributes_for(:comment, task: current_task) }
+          run_test!
+        end
+
+        response '422', 'Short Body' do
+          let(:Authorization) { "Bearer #{User.first.token}" }
+          let(:project_id) { current_project.id }
+          let(:task_id) { current_task.id }
+          let(:comment) { { body: 'f' } }
+          run_test!
+        end
+
+        response '422', 'Long Body' do
+          let(:Authorization) { "Bearer #{User.first.token}" }
+          let(:project_id) { current_project.id }
+          let(:task_id) { current_task.id }
+          let(:comment) { { body: ::FFaker::Lorem.paragraphs } }
+          run_test!
+        end
+
+        response '404', 'Not Found Project' do
+          let(:Authorization) { "Bearer #{User.first.token}" }
+          let(:project_id) { 'invalid' }
+          let(:task_id) { current_task.id }
+          let(:comment) { FactoryBot.attributes_for(:comment, task: current_task) }
+          run_test!
+        end
+
+        response '404', 'Not Found Task' do
+          let(:Authorization) { "Bearer #{User.first.token}" }
+          let(:project_id) { current_project.id }
+          let(:task_id) { 'invalid' }
+          let(:comment) { FactoryBot.attributes_for(:comment, task: current_task) }
+          run_test!
+        end
+
+        response '401', :unauthorized do
+          let(:Authorization) { 'Bearer invalid' }
+          let(:project_id) { current_project.id }
+          let(:task_id) { current_task.id }
+          let(:comment) { FactoryBot.attributes_for(:comment, task: current_task) }
+          run_test!
+        end
+      end
     end
   end
 
-  describe 'authorized' do
-    before(:each) do
-      allow_any_instance_of(ApplicationController).to receive(:authorize).and_return(true)
-      allow_any_instance_of(ApplicationController).to receive(:current_user).and_return(current_user)
-    end
+  describe 'destroy' do
+    path '/api/v1/projects/{project_id}/tasks/{task_id}/comments/{id}' do
+      delete 'Destroy Comment' do
+        tags 'Comments'
+        security [Bearer: {}]
+        parameter name: :project_id, in: :path
+        parameter name: :task_id, in: :path
+        parameter name: :id, in: :path
 
-    describe 'create' do
-      include Docs::V1::Comments::Create
+        response '200', :ok do
+          let(:Authorization) { "Bearer #{User.first.token}" }
+          let(:project_id) { current_project.id }
+          let(:task_id) { current_task.id }
+          let(:id) { current_comment.id }
+          run_test!
+        end
 
-      it 'valid params', :dox do
-        post "/api/v1/projects/#{current_project.id}/tasks/#{current_task.id}/comments",
-             params: FactoryBot.attributes_for(:comment)
-        expect(response).to have_http_status :created
-        expect(response).to match_json_schema('show_task')
-      end
+        response '404', 'Non Existing Project' do
+          let(:Authorization) { "Bearer #{User.first.token}" }
+          let(:project_id) { 'invalid' }
+          let(:task_id) { current_task.id }
+          let(:id) { current_comment.id }
+          run_test!
+        end
 
-      it 'short body', :dox do
-        post "/api/v1/projects/#{current_project.id}/tasks/#{current_task.id}/comments",
-             params: { body: 'f' }
-        expect(response).to have_http_status :unprocessable_entity
-      end
+        response '404', :'Non Existing Task' do
+          let(:Authorization) { "Bearer #{User.first.token}" }
+          let(:project_id) { current_project.id }
+          let(:task_id) { 'invalid' }
+          let(:id) { current_comment.id }
+          run_test!
+        end
 
-      it 'long body', :dox do
-        post "/api/v1/projects/#{current_project.id}/tasks/#{current_task.id}/comments",
-             params: { body: ::FFaker::Lorem.paragraphs }
-        expect(response).to have_http_status :unprocessable_entity
-      end
-    end
+        response '404', 'Non Existing Comment' do
+          let(:Authorization) { "Bearer #{User.first.token}" }
+          let(:project_id) { current_project.id }
+          let(:task_id) { current_task.id }
+          let(:id) { 'invalid' }
+          run_test!
+        end
 
-    describe 'destroy' do
-      include Docs::V1::Comments::Destroy
-
-      it 'valid params', :dox do
-        delete "/api/v1/projects/#{current_project.id}/tasks/#{current_task.id}/comments/#{comment.id}"
-        expect(response).to have_http_status :ok
-      end
-
-      it 'non-existent project', :dox do
-        delete "/api/v1/projects/some_id/tasks/#{current_task.id}/comments/#{comment.id}"
-        expect(response).to have_http_status :not_found
-      end
-
-      it 'non-existent task', :dox do
-        delete "/api/v1/projects/#{current_project.id}/tasks/some_id/comments/#{comment.id}"
-        expect(response).to have_http_status :not_found
-      end
-
-      it 'non-existent comment', :dox do
-        delete "/api/v1/projects/#{current_project.id}/tasks/#{current_task.id}/comments/some_id"
-        expect(response).to have_http_status :not_found
+        response '401', :unauthorized do
+          let(:Authorization) { 'Bearer invalid' }
+          let(:project_id) { current_project.id }
+          let(:task_id) { current_task.id }
+          let(:id) { current_comment.id }
+          run_test!
+        end
       end
     end
   end
