@@ -41,28 +41,33 @@ RSpec.configure do |config|
               id: { type: 'integer' },
               title: { type: 'string' },
               user: { '$ref' => '#/components/schemas/user' }
-            }
+            },
+            required: %w[id title user]
           },
           new_project: {
             type: 'object',
             properties: {
               title: { type: 'string' },
               user: { '$ref' => '#/components/schemas/user' }
-            }
+            },
+            required: %w[title user]
           },
           user: {
             type: 'object',
             properties: {
               id: { type: 'integer' },
-              email: { type: 'string' }
-            }
+              email: { type: 'string' },
+              token: { type: 'string' },
+            },
+            required: %w[id email]
           },
           new_user: {
             type: 'object',
             properties: {
               email: { type: 'string' },
               password: { type: 'string' }
-            }
+            },
+            required: %w[email password]
           },
           new_task: {
             type: 'object',
@@ -72,7 +77,8 @@ RSpec.configure do |config|
               position: { type: 'integer' },
               completed: { type: 'boolean' },
               project: { '$ref' => '#/components/schemas/project' }
-            }
+            },
+            required: %w[title project]
           },
           task: {
             type: 'object',
@@ -84,7 +90,8 @@ RSpec.configure do |config|
               completed: { type: 'boolean' },
               project: { '$ref' => '#/components/schemas/project' }
             }
-          }
+          },
+          required: %w[id title project]
         },
         new_comment: {
           type: 'object',

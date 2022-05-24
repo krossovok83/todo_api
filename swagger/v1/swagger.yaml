@@ -307,6 +307,10 @@ components:
           type: string
         user:
           "$ref": "#/components/schemas/user"
+      required:
+      - id
+      - title
+      - user
     new_project:
       type: object
       properties:
@@ -314,6 +318,9 @@ components:
           type: string
         user:
           "$ref": "#/components/schemas/user"
+      required:
+      - title
+      - user
     user:
       type: object
       properties:
@@ -321,6 +328,11 @@ components:
           type: integer
         email:
           type: string
+        token:
+          type: string
+      required:
+      - id
+      - email
     new_user:
       type: object
       properties:
@@ -328,6 +340,9 @@ components:
           type: string
         password:
           type: string
+      required:
+      - email
+      - password
     new_task:
       type: object
       properties:
@@ -342,6 +357,9 @@ components:
           type: boolean
         project:
           "$ref": "#/components/schemas/project"
+      required:
+      - title
+      - project
     task:
       type: object
       properties:
@@ -358,6 +376,10 @@ components:
           type: boolean
         project:
           "$ref": "#/components/schemas/project"
+    required:
+    - id
+    - title
+    - project
   new_comment:
     type: object
     properties:
