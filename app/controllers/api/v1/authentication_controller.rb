@@ -8,11 +8,7 @@ module Api
       def login
         run Session::Operation::Login
         if result.success?
-          render json: {
-            token: @model[:token],
-            exp: result[:time].strftime('%m-%d-%Y %H:%M'),
-            username: @model.email
-          }, status: :ok
+          render json: { json: UserSerializer.new(@model).serializable_hash.to_json }
         else
           render json: { error: 'unauthorized' }, status: :unauthorized
         end
