@@ -8,7 +8,7 @@ module Api
       def login
         run Session::Operation::Login
         if result.success?
-          render json: { json: UserSerializer.new(@model).serializable_hash.to_json }
+          render json: UserSerializer.new(@model).serializable_hash.to_json
         else
           render json: { error: 'unauthorized' }, status: :unauthorized
         end
@@ -17,7 +17,7 @@ module Api
       def logout
         result = Session::Operation::Logout.call(params: { id: current_user.id })
         if result.success?
-          render json: { message: 'logout successfully' }
+          head :ok
         else
           render json: { errors: result[:'result.contract.default'].errors.full_messages }
         end

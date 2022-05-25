@@ -19,7 +19,7 @@ paths:
         content:
           application/json:
             schema:
-              "$ref": "#/components/schemas/new_user"
+              "$ref": "#/components/schemas/auth_user"
   "/api/v1/auth/logout":
     delete:
       summary: User LogOut
@@ -306,7 +306,10 @@ components:
         title:
           type: string
         user:
-          "$ref": "#/components/schemas/user"
+          type: object
+          properties:
+            id:
+              type: integer
       required:
       - id
       - title
@@ -317,7 +320,10 @@ components:
         title:
           type: string
         user:
-          "$ref": "#/components/schemas/user"
+          type: object
+          properties:
+            id:
+              type: integer
       required:
       - title
       - user
@@ -340,6 +346,19 @@ components:
           type: string
         password:
           type: string
+        password_confirmation:
+          type: string
+      required:
+      - email
+      - password
+      - password_confirmation
+    auth_user:
+      type: object
+      properties:
+        email:
+          type: string
+        password:
+          type: string
       required:
       - email
       - password
@@ -356,7 +375,10 @@ components:
         completed:
           type: boolean
         project:
-          "$ref": "#/components/schemas/project"
+          type: object
+          properties:
+            id:
+              type: integer
       required:
       - title
       - project
@@ -375,22 +397,28 @@ components:
         completed:
           type: boolean
         project:
-          "$ref": "#/components/schemas/project"
-    required:
-    - id
-    - title
-    - project
-  new_comment:
-    type: object
-    properties:
-      body:
-        type: text
-        x-nullable: true
-      image_data:
-        type: text
-        x-nullable: true
-      task:
-        "$ref": "#/components/schemas/task"
+          type: object
+          properties:
+            id:
+              type: integer
+      required:
+      - id
+      - title
+      - project
+    new_comment:
+      type: object
+      properties:
+        body:
+          type: text
+          x-nullable: true
+        image_data:
+          type: text
+          x-nullable: true
+        task:
+          type: object
+          properties:
+            id:
+              type: integer
   securitySchemes:
     Bearer:
       type: apiKey

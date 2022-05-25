@@ -40,7 +40,12 @@ RSpec.configure do |config|
             properties: {
               id: { type: 'integer' },
               title: { type: 'string' },
-              user: { '$ref' => '#/components/schemas/user' }
+              user: {
+                type: 'object',
+                properties: {
+                  id: { type: 'integer' }
+                }
+              }
             },
             required: %w[id title user]
           },
@@ -48,7 +53,12 @@ RSpec.configure do |config|
             type: 'object',
             properties: {
               title: { type: 'string' },
-              user: { '$ref' => '#/components/schemas/user' }
+              user: {
+                type: 'object',
+                properties: {
+                  id: { type: 'integer' }
+                }
+              }
             },
             required: %w[title user]
           },
@@ -57,11 +67,20 @@ RSpec.configure do |config|
             properties: {
               id: { type: 'integer' },
               email: { type: 'string' },
-              token: { type: 'string' },
+              token: { type: 'string' }
             },
             required: %w[id email]
           },
           new_user: {
+            type: 'object',
+            properties: {
+              email: { type: 'string' },
+              password: { type: 'string' },
+              password_confirmation: { type: 'string' }
+            },
+            required: %w[email password password_confirmation]
+          },
+          auth_user: {
             type: 'object',
             properties: {
               email: { type: 'string' },
@@ -76,7 +95,12 @@ RSpec.configure do |config|
               deadline: { type: 'datetime', 'x-nullable': true },
               position: { type: 'integer' },
               completed: { type: 'boolean' },
-              project: { '$ref' => '#/components/schemas/project' }
+              project: {
+                type: 'object',
+                properties: {
+                  id: { type: 'integer' }
+                }
+              }
             },
             required: %w[title project]
           },
@@ -88,17 +112,27 @@ RSpec.configure do |config|
               deadline: { type: 'datetime', 'x-nullable': true },
               position: { type: 'integer' },
               completed: { type: 'boolean' },
-              project: { '$ref' => '#/components/schemas/project' }
-            }
+              project: {
+                type: 'object',
+                properties: {
+                  id: { type: 'integer' }
+                }
+              }
+            },
+            required: %w[id title project]
           },
-          required: %w[id title project]
-        },
-        new_comment: {
-          type: 'object',
-          properties: {
-            body: { type: 'text', 'x-nullable': true },
-            image_data: { type: 'text', 'x-nullable': true },
-            task: { '$ref' => '#/components/schemas/task' }
+          new_comment: {
+            type: 'object',
+            properties: {
+              body: { type: 'text', 'x-nullable': true },
+              image_data: { type: 'text', 'x-nullable': true },
+              task: {
+                type: 'object',
+                properties: {
+                  id: { type: 'integer' }
+                }
+              }
+            }
           }
         },
         securitySchemes: {

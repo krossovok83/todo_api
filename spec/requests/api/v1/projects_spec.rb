@@ -3,10 +3,7 @@
 require 'swagger_helper'
 
 RSpec.describe Api::V1::ProjectsController do
-  let(:current_user) { FactoryBot.create(:user) }
-  before(:each) do
-    post '/api/v1/auth/login', params: { email: current_user.email, password: current_user.password }
-  end
+  let(:current_user) { User::Operation::Create.call(params: FactoryBot.attributes_for(:user))[:model] }
 
   describe 'index' do
     path '/api/v1/projects' do
@@ -14,7 +11,7 @@ RSpec.describe Api::V1::ProjectsController do
         tags 'Projects'
         security [Bearer: {}]
         response '200', :ok do
-          let(:Authorization) { "Bearer #{User.first.token}" }
+          let(:Authorization) { "Bearer #{current_user.token}" }
           schema type: :object,
                  properties: {
                    collection: {
@@ -39,7 +36,7 @@ RSpec.describe Api::V1::ProjectsController do
         tags 'Projects'
         security [Bearer: {}]
         parameter name: :project, in: :body, schema: { '$ref' => '#/components/schemas/new_project' }
-        let(:Authorization) { "Bearer #{User.first.token}" }
+        let(:Authorization) { "Bearer #{current_user.token}" }
 
         response '201', :created do
           let(:project) { FactoryBot.attributes_for(:project) }
@@ -71,7 +68,7 @@ RSpec.describe Api::V1::ProjectsController do
         tags 'Projects'
         security [Bearer: {}]
         parameter name: :id, in: :path, schema: { '$ref' => '#/components/schemas/project' }
-        let(:Authorization) { "Bearer #{User.first.token}" }
+        let(:Authorization) { "Bearer #{current_user.token}" }
 
         response '200', :ok do
           let(:id) { FactoryBot.create(:project, user: current_user).id }
@@ -99,7 +96,7 @@ RSpec.describe Api::V1::ProjectsController do
         security [Bearer: {}]
         parameter name: :id, in: :path, type: :integer
         parameter name: :project, in: :body, schema: { '$ref' => '#/components/schemas/project' }
-        let(:Authorization) { "Bearer #{User.first.token}" }
+        let(:Authorization) { "Bearer #{current_user.token}" }
 
         response '200', :ok do
           let(:id) { FactoryBot.create(:project, user: current_user).id }
@@ -141,7 +138,7 @@ RSpec.describe Api::V1::ProjectsController do
         tags 'Projects'
         security [Bearer: {}]
         parameter name: :id, in: :path, type: :integer
-        let(:Authorization) { "Bearer #{User.first.token}" }
+        let(:Authorization) { "Bearer #{current_user.token}" }
 
         response '200', :ok do
           let(:id) { FactoryBot.create(:project, user: current_user).id }

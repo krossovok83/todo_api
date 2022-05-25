@@ -3,14 +3,14 @@
 require 'swagger_helper'
 
 RSpec.describe Api::V1::AuthenticationController, type: :request do
-  let(:current_user) { FactoryBot.create(:user) }
+  let(:current_user) { User::Operation::Create.call(params: FactoryBot.attributes_for(:user))[:model] }
 
   path '/api/v1/auth/login' do
     post 'User LogIn' do
       tags 'Authentications'
-      parameter name: :user, in: :body, schema: { '$ref' => '#/components/schemas/new_user' }
+      parameter name: :user, in: :body, schema: { '$ref' => '#/components/schemas/auth_user' }
       response '200', :ok do
-        let(:user) { { email: current_user.email, password: current_user.password } }
+        let(:user) { { email: current_user.email, password: 'password' } }
         run_test!
       end
 
@@ -30,7 +30,7 @@ RSpec.describe Api::V1::AuthenticationController, type: :request do
         before do
           post '/api/v1/auth/login', params: { email: current_user.email, password: current_user.password }
         end
-        let(:Authorization) { "Bearer #{User.first.token}" }
+        let(:Authorization) { "Bearer #{current_user.token}" }
         run_test!
       end
 
