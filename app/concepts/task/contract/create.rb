@@ -8,6 +8,6 @@ module Task::Contract
     property :position
     property :completed
 
-    validates :title, presence: true, length: { in: 3..50 }
+    validates :title, presence: true, length: { in: Constants::TASK_LENGTH }
   end
 end

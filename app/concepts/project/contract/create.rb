@@ -5,6 +5,6 @@ module Project::Contract
     property :title
     property :user_id
 
-    validates :title, presence: true, length: { in: 3..50 }, unique: true
+    validates :title, presence: true, length: { in: Constants::PROJECT_LENGTH }, unique: true
   end
 end

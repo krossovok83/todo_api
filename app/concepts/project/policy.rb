@@ -1,11 +1,12 @@
 # frozen_string_literal: true
 
-module Project::Policy
-  class Guard
-    def call(ctx, *_args)
-      user = ctx[:current_user]
-      params = ctx[:params]
-      user.projects.where(id: params[:id]).present?
-    end
+class Project::Policy
+  def initialize(user, model)
+    @user = user
+    @model = model
+  end
+
+  def show?
+    @model.user == @user
   end
 end

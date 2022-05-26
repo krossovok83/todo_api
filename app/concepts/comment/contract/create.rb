@@ -6,6 +6,6 @@ module Comment::Contract
     property :body
     property :image_data
 
-    validates :body, length: { in: 10..256 }, allow_blank: true
+    validates :body, length: { in: Constants::COMMENT_LENGTH }, allow_blank: true
   end
 end
