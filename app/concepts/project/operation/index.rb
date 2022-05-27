@@ -2,10 +2,10 @@
 
 module Project::Operation
   class Index < Trailblazer::Operation
-    step :find_all
+    step :model
 
-    def find_all(ctx, **)
-      ctx[:model] = ctx[:current_user].projects
+    def model(ctx, current_user:, **)
+      ctx[:model] = current_user.projects
     end
   end
 end

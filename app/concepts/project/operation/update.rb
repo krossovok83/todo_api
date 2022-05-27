@@ -8,11 +8,7 @@ module Project::Operation
     fail :status
 
     def status(ctx, **)
-      ctx[:status] = if ctx['result.model'].failure? || ctx['result.policy.default'].failure?
-                       :not_found
-                     else
-                       :unprocessable_entity
-                     end
+      ctx[:status] = ctx[:model].nil? ? :not_found : :unprocessable_entity
     end
   end
 end

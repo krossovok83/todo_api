@@ -3,14 +3,14 @@
 module Session::Operation
   class Authorization < Trailblazer::Operation
     step :check_token
-    fail :unauthorized
     step :decoded
     step :current_user
+    fail :unauthorized
 
-    def check_token(ctx, **)
-      return false unless ctx[:token]
+    def check_token(_ctx, token:, **)
+      return false unless token
 
-      @token = ctx[:token].split[1]
+      @token = token.split[1]
       @user = User.find_by(token: @token)
       @user.present?
     end

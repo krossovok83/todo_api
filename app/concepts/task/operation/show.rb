@@ -2,8 +2,11 @@
 
 module Task::Operation
   class Show < Trailblazer::Operation
-    step Model(Task, :find_by)
+    step Rescue(ActiveRecord::RecordNotFound) { step :model! }
     step Contract::Build(constant: Task::Contract::Create)
-    step Policy::Guard(::Task::Policy::Guard.new)
+
+    def model!(ctx, current_user:, params:, **)
+      ctx[:model] = current_user.projects.find(params[:project_id]).tasks.find(params[:id])
+    end
   end
 end

@@ -29,9 +29,8 @@ module Api
         run Project::Operation::Update do
           return head :ok
         end
-        head result[:status] and return if result['result.model'].failure?
-
-        render json: { errors: @form.errors.full_messages }, status: result[:status]
+        render json: { errors: @form.errors.full_messages } if @form.present?
+        head result[:status]
       end
 
       def destroy

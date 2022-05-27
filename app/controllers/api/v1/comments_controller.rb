@@ -10,7 +10,8 @@ module Api
           model_json = TaskSerializer.new(@model.task, { include: [:comments] }).serializable_hash.to_json
           render(json: model_json, status: :created) and return
         end
-        render json: { errors: @form.errors.full_messages }, status: result[:status]
+        render json: { errors: @form.errors.full_messages } if @form.present?
+        head result[:status]
       end
 
       def destroy

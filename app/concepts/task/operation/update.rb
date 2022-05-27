@@ -8,20 +8,14 @@ module Task::Operation
     step :position_change
     fail :status
 
-    def position_change(ctx, **)
-      model = ctx[:model]
-      params = ctx[:params]
+    def position_change(_ctx, model:, params:, **)
       model.move_higher if params[:position_up]
       model.move_lower if params[:position_down]
       true
     end
 
     def status(ctx, **)
-      ctx[:status] = if ctx['result.model'].failure? || ctx['result.policy.default'].failure?
-                       :not_found
-                     else
-                       :unprocessable_entity
-                     end
+      ctx[:status] = ctx[:model].nil? ? :not_found : :unprocessable_entity
     end
   end
 end

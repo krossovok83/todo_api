@@ -6,14 +6,14 @@ module Session::Operation
     step :user_auth
     step :write_token
 
-    def user_auth(ctx, **)
-      ctx[:model].authenticate(ctx[:params][:password])
+    def user_auth(_ctx, model:, params:, **)
+      model.authenticate(params[:password])
     end
 
-    def write_token(ctx, **)
-      ctx[:model].token = JsonWebToken.encode(user_id: ctx[:model].id)
+    def write_token(ctx, model:, **)
+      model.token = JsonWebToken.encode(user_id: model.id)
       ctx[:time] = Time.now + 24.hours.to_i
-      ctx[:model].save
+      model.save
     end
   end
 end

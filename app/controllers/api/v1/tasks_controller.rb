@@ -9,7 +9,8 @@ module Api
         run Task::Operation::Create do
           render(json: TaskSerializer.new(@model).serializable_hash.to_json, status: :created) and return
         end
-        render json: { errors: @form.errors.full_messages }, status: result[:status]
+        render json: { errors: @form.errors.full_messages } if @form.present?
+        head result[:status]
       end
 
       def show
@@ -23,9 +24,8 @@ module Api
         run Task::Operation::Update do
           return head :ok
         end
-        head result[:status] and return if result['result.model'].failure?
-
-        render json: { errors: @form.errors.full_messages }, status: result[:status]
+        render json: { errors: @form.errors.full_messages } if @form.present?
+        head result[:status]
       end
 
       def destroy

@@ -5,8 +5,8 @@ module Project::Operation
     step Subprocess(::Project::Operation::Show)
     step :delete
 
-    def delete(ctx, **)
-      ctx[:model].destroy
+    def delete(_ctx, model:, **)
+      model.destroy
     end
   end
 end

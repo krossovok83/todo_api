@@ -2,8 +2,11 @@
 
 module Project::Operation
   class Show < Trailblazer::Operation
-    step Model(Project, :find_by)
+    step Rescue(ActiveRecord::RecordNotFound) { step :model! }
     step Contract::Build(constant: Project::Contract::Create)
-    step Policy::Pundit(Project::Policy, :show?)
+
+    def model!(ctx, current_user:, params:, **)
+      ctx[:model] = current_user.projects.find(params[:id])
+    end
   end
 end
