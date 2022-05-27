@@ -3,7 +3,7 @@
 module Api
   module V1
     class ProjectsController < ApplicationController
-      before_action :authorize
+      before_action :authorize_access_request!
 
       def index
         run Project::Operation::Index do

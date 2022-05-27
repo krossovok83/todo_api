@@ -2,14 +2,22 @@
 
 module Api
   module V1
-    class UsersController < ApplicationController
+    class LoginController < ApplicationController
+      before_action :authorize_access_request!, only: :destroy
+
       def create
-        run User::Operation::Create
+        run Session::Operation::Login
         if result.success?
           options = Hash(params: result[:session])
           render(json: UserSerializer.new(@model, options).serializable_hash.to_json, status: :created)
         else
-          render json: { errors: @form.errors.full_messages }, status: :unprocessable_entity
+          head :unauthorized
+        end
+      end
+
+      def destroy
+        run Session::Operation::Login::ClearSession do
+          head :ok
         end
       end
     end

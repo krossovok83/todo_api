@@ -6,8 +6,9 @@ Rails.application.routes.draw do
   namespace :api do
     namespace :v1 do
       resources :users, only: :create
-      post '/auth/login', to: 'authentication#login'
-      delete '/auth/logout', to: 'authentication#logout'
+      post '/auth/login', to: 'login#create'
+      post '/auth/refresh', to: 'refresh#create'
+      delete '/auth/logout', to: 'login#destroy'
       resources :projects do
         resources :tasks, except: :index do
           resources :comments, only: %i[create destroy]
@@ -15,5 +16,5 @@ Rails.application.routes.draw do
       end
     end
   end
-  get '/*a', to: 'application#not_found'
+  # get '/*a', to: 'application#not_found'
 end

@@ -2,14 +2,18 @@
 
 require 'swagger_helper'
 
-RSpec.describe Api::V1::AuthenticationController, type: :request do
+RSpec.describe Api::V1::LoginController, type: :request do
   let(:current_user) { User::Operation::Create.call(params: FactoryBot.attributes_for(:user))[:model] }
+  let(:token) {
+    Session::Operation::Login.call(params: { email: current_user.email, password: 'password' })[:session][:access]
+  }
+  let(:Authorization) { "Bearer #{token}" }
 
   path '/api/v1/auth/login' do
     post 'User LogIn' do
       tags 'Authentications'
       parameter name: :user, in: :body, schema: { '$ref' => '#/components/schemas/auth_user' }
-      response '200', :ok do
+      response '201', :ok do
         let(:user) { { email: current_user.email, password: 'password' } }
         run_test!
       end
@@ -30,7 +34,6 @@ RSpec.describe Api::V1::AuthenticationController, type: :request do
         before do
           post '/api/v1/auth/login', params: { email: current_user.email, password: current_user.password }
         end
-        let(:Authorization) { "Bearer #{current_user.token}" }
         run_test!
       end
 

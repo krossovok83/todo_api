@@ -2,23 +2,26 @@
 
 class ApplicationController < ActionController::API
   attr_reader :current_user
+  include JWTSessions::RailsAuthorization
+  rescue_from JWTSessions::Errors::Unauthorized, with: :not_authorized
 
-  def not_found
-    render json: { error: 'not_found' }, status: not_found
+  def not_authorized
+    head :unauthorized
   end
 
-  def authorize
-    result = Session::Operation::Authorization.call(token: request.headers['Authorization'])
-    if result.success?
-      @current_user = result[:current_user]
-    else
-      render json: { errors: result[:errors].message }, status: :unauthorized
-    end
+  def not_found
+    head :not_found
+  end
+
+  def current_user
+    @current_user ||= User.find(payload["user_id"])
   end
 
   private
 
   def _run_options(options)
+    return {} if (params[:controller] == 'api/v1/login' && params[:action] == 'create') ||
+      (params[:controller] == 'api/v1/users' && params[:action] == 'create')
     options.merge(current_user:)
   end
 end

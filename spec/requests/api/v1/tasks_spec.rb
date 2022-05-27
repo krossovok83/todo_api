@@ -6,6 +6,10 @@ RSpec.describe Api::V1::TasksController, type: :request do
   let(:current_user) { User::Operation::Create.call(params: FactoryBot.attributes_for(:user))[:model] }
   let(:current_project) { FactoryBot.create(:project, user: current_user) }
   let(:current_task) { FactoryBot.create(:task, project: current_project) }
+  let(:token) {
+    Session::Operation::Login.call(params: { email: current_user.email, password: 'password' })[:session][:access]
+  }
+  let(:Authorization) { "Bearer #{token}" }
 
   describe 'create' do
     path '/api/v1/projects/{project_id}/tasks' do
@@ -16,28 +20,24 @@ RSpec.describe Api::V1::TasksController, type: :request do
         parameter name: :task, in: :body, schema: { '$ref' => '#/components/schemas/new_task' }
 
         response '201', :created do
-          let(:Authorization) { "Bearer #{current_user.token}" }
           let(:project_id) { current_project.id }
           let(:task) { FactoryBot.attributes_for(:task, project: current_project) }
           run_test!
         end
 
         response '404', 'Not Found Project' do
-          let(:Authorization) { "Bearer #{current_user.token}" }
           let(:project_id) { 'invalid' }
           let(:task) { FactoryBot.attributes_for(:task, project: current_project) }
           run_test!
         end
 
         response '422', 'Short Task Title' do
-          let(:Authorization) { "Bearer #{current_user.token}" }
           let(:project_id) { current_project.id }
           let(:task) { { title: 'q' } }
           run_test!
         end
 
         response '422', 'Long Task Title' do
-          let(:Authorization) { "Bearer #{current_user.token}" }
           let(:project_id) { current_project.id }
           let(:task) { { title: ::FFaker::Lorem.paragraph } }
           run_test!
@@ -62,21 +62,18 @@ RSpec.describe Api::V1::TasksController, type: :request do
         parameter name: :id, in: :path
 
         response '200', :ok do
-          let(:Authorization) { "Bearer #{current_user.token}" }
           let(:project_id) { current_project.id }
           let(:id) { current_task.id }
           run_test!
         end
 
         response '404', 'Not Found Project' do
-          let(:Authorization) { "Bearer #{current_user.token}" }
           let(:project_id) { 'invalid' }
           let(:id) { current_task.id }
           run_test!
         end
 
         response '404', 'Not Found Task' do
-          let(:Authorization) { "Bearer #{current_user.token}" }
           let(:project_id) { current_project.id }
           let(:id) { 'invalid' }
           run_test!
@@ -102,7 +99,6 @@ RSpec.describe Api::V1::TasksController, type: :request do
         parameter name: :task, in: :body, schema: { '$ref' => '#/components/schemas/task' }
 
         response '200', :ok do
-          let(:Authorization) { "Bearer #{current_user.token}" }
           let(:project_id) { current_project.id }
           let(:id) { current_task.id }
           let(:task) { FactoryBot.attributes_for(:task) }
@@ -110,7 +106,6 @@ RSpec.describe Api::V1::TasksController, type: :request do
         end
 
         response '422', 'Short Title' do
-          let(:Authorization) { "Bearer #{current_user.token}" }
           let(:project_id) { current_project.id }
           let(:id) { current_task.id }
           let(:task) { { title: 'q' } }
@@ -118,7 +113,6 @@ RSpec.describe Api::V1::TasksController, type: :request do
         end
 
         response '422', 'Long Title' do
-          let(:Authorization) { "Bearer #{current_user.token}" }
           let(:project_id) { current_project.id }
           let(:id) { current_task.id }
           let(:task) { { title: ::FFaker::Lorem.paragraph } }
@@ -126,7 +120,6 @@ RSpec.describe Api::V1::TasksController, type: :request do
         end
 
         response '404', 'Not Found Project' do
-          let(:Authorization) { "Bearer #{current_user.token}" }
           let(:project_id) { 'invalid' }
           let(:id) { current_task.id }
           let(:task) { FactoryBot.attributes_for(:task) }
@@ -134,7 +127,6 @@ RSpec.describe Api::V1::TasksController, type: :request do
         end
 
         response '404', 'Not Found Task' do
-          let(:Authorization) { "Bearer #{current_user.token}" }
           let(:project_id) { current_project.id }
           let(:id) { 'invaild' }
           let(:task) { FactoryBot.attributes_for(:task) }
@@ -161,21 +153,18 @@ RSpec.describe Api::V1::TasksController, type: :request do
         parameter name: :id, in: :path
 
         response '200', :ok do
-          let(:Authorization) { "Bearer #{current_user.token}" }
           let(:project_id) { current_project.id }
           let(:id) { current_task.id }
           run_test!
         end
 
         response '404', 'Not Found Project' do
-          let(:Authorization) { "Bearer #{current_user.token}" }
           let(:project_id) { 'invalid' }
           let(:id) { current_task.id }
           run_test!
         end
 
         response '404', 'Not Found Task' do
-          let(:Authorization) { "Bearer #{current_user.token}" }
           let(:project_id) { current_project.id }
           let(:id) { 'invalid' }
           run_test!

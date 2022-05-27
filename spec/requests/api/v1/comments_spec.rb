@@ -4,9 +4,13 @@ require 'swagger_helper'
 
 RSpec.describe Api::V1::CommentsController, type: :request do
   let(:current_user) { User::Operation::Create.call(params: FactoryBot.attributes_for(:user))[:model] }
+  let(:token) do
+    Session::Operation::Login.call(params: { email: current_user.email, password: 'password' })[:session][:access]
+  end
   let(:current_project) { FactoryBot.create(:project, user: current_user) }
   let(:current_task) { FactoryBot.create(:task, project: current_project) }
   let(:current_comment) { FactoryBot.create(:comment, task: current_task) }
+  let(:Authorization) { "Bearer #{token}" }
 
   describe 'create' do
     path '/api/v1/projects/{project_id}/tasks/{task_id}/comments' do
@@ -18,7 +22,6 @@ RSpec.describe Api::V1::CommentsController, type: :request do
         parameter name: :comment, in: :body, schema: { '$ref' => '#/components/schemas/new_comment' }
 
         response '201', :created do
-          let(:Authorization) { "Bearer #{current_user.token}" }
           let(:project_id) { current_project.id }
           let(:task_id) { current_task.id }
           let(:comment) { FactoryBot.attributes_for(:comment, task: current_task) }
@@ -26,7 +29,6 @@ RSpec.describe Api::V1::CommentsController, type: :request do
         end
 
         response '422', 'Short Body' do
-          let(:Authorization) { "Bearer #{current_user.token}" }
           let(:project_id) { current_project.id }
           let(:task_id) { current_task.id }
           let(:comment) { { body: 'f' } }
@@ -34,7 +36,6 @@ RSpec.describe Api::V1::CommentsController, type: :request do
         end
 
         response '422', 'Long Body' do
-          let(:Authorization) { "Bearer #{current_user.token}" }
           let(:project_id) { current_project.id }
           let(:task_id) { current_task.id }
           let(:comment) { { body: ::FFaker::Lorem.paragraphs } }
@@ -42,7 +43,6 @@ RSpec.describe Api::V1::CommentsController, type: :request do
         end
 
         response '404', 'Not Found Project' do
-          let(:Authorization) { "Bearer #{current_user.token}" }
           let(:project_id) { 'invalid' }
           let(:task_id) { current_task.id }
           let(:comment) { FactoryBot.attributes_for(:comment, task: current_task) }
@@ -50,7 +50,6 @@ RSpec.describe Api::V1::CommentsController, type: :request do
         end
 
         response '404', 'Not Found Task' do
-          let(:Authorization) { "Bearer #{current_user.token}" }
           let(:project_id) { current_project.id }
           let(:task_id) { 'invalid' }
           let(:comment) { FactoryBot.attributes_for(:comment, task: current_task) }
@@ -78,7 +77,6 @@ RSpec.describe Api::V1::CommentsController, type: :request do
         parameter name: :id, in: :path
 
         response '200', :ok do
-          let(:Authorization) { "Bearer #{current_user.token}" }
           let(:project_id) { current_project.id }
           let(:task_id) { current_task.id }
           let(:id) { current_comment.id }
@@ -86,7 +84,6 @@ RSpec.describe Api::V1::CommentsController, type: :request do
         end
 
         response '404', 'Non Existing Project' do
-          let(:Authorization) { "Bearer #{current_user.token}" }
           let(:project_id) { 'invalid' }
           let(:task_id) { current_task.id }
           let(:id) { current_comment.id }
@@ -94,7 +91,6 @@ RSpec.describe Api::V1::CommentsController, type: :request do
         end
 
         response '404', :'Non Existing Task' do
-          let(:Authorization) { "Bearer #{current_user.token}" }
           let(:project_id) { current_project.id }
           let(:task_id) { 'invalid' }
           let(:id) { current_comment.id }
@@ -102,7 +98,6 @@ RSpec.describe Api::V1::CommentsController, type: :request do
         end
 
         response '404', 'Non Existing Comment' do
-          let(:Authorization) { "Bearer #{current_user.token}" }
           let(:project_id) { current_project.id }
           let(:task_id) { current_task.id }
           let(:id) { 'invalid' }

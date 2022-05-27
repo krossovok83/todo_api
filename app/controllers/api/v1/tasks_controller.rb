@@ -3,7 +3,7 @@
 module Api
   module V1
     class TasksController < ApplicationController
-      before_action :authorize
+      before_action :authorize_access_request!
 
       def create
         run Task::Operation::Create do
