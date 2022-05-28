@@ -16,9 +16,8 @@ module Api
       end
 
       def destroy
-        run Session::Operation::Login::ClearSession do
-          head :ok
-        end
+        result = Session::Operation::Logout.call(params: { token: request.headers['X-Refresh-Token'] })
+        result.success? ? (head :ok) : (head :unauthorized)
       end
     end
   end

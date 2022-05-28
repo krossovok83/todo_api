@@ -2,16 +2,7 @@
 
 module Session::Operation
   class Login < Trailblazer::Operation
-    class ClearSession < Trailblazer::Operation
-      step :clear_store
-
-      def clear_store(*_args)
-        JWTSessions.token_store.storage.clear
-      end
-    end
-
     step Model(User, :find_by, :email)
-    step Subprocess(ClearSession)
     step :user_auth
     step :new_session
 

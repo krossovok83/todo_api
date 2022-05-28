@@ -20,8 +20,11 @@ class ApplicationController < ActionController::API
   private
 
   def _run_options(options)
-    return {} if (params[:controller] == 'api/v1/login' && params[:action] == 'create') ||
-      (params[:controller] == 'api/v1/users' && params[:action] == 'create')
-    options.merge(current_user:)
+    auth_required? ? options.merge(current_user:) : options
+  end
+
+  def auth_required?
+    true unless (params[:controller] == 'api/v1/login' && params[:action] == 'create') ||
+      params[:controller] == 'api/v1/users'
   end
 end

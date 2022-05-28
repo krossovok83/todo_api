@@ -2,11 +2,10 @@
 
 module Session::Operation
   class Logout < Trailblazer::Operation
-    step Model(User, :find_by)
     step :remove_token
 
-    def remove_token(_ctx, model:, **)
-      model.update(token: nil)
+    def remove_token(_ctx, params:, **)
+      JWTSessions::Session.new.flush_by_token(params[:token])
     end
   end
 end
