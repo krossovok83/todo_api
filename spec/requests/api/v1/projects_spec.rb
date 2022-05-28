@@ -4,9 +4,9 @@ require 'swagger_helper'
 
 RSpec.describe Api::V1::ProjectsController do
   let(:current_user) { User::Operation::Create.call(params: FactoryBot.attributes_for(:user))[:model] }
-  let(:token) {
+  let(:token) do
     Session::Operation::Login.call(params: { email: current_user.email, password: 'password' })[:session][:access]
-  }
+  end
   let(:Authorization) { "Bearer #{token}" }
 
   describe 'index' do

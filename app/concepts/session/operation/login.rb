@@ -12,9 +12,7 @@ module Session::Operation
 
     def new_session(ctx, model:, **)
       user_payload = { user_id: model.id }
-      session = JWTSessions::Session.new(refresh_by_access_allowed: true,
-                                         payload: user_payload,
-                                         refresh_payload: user_payload)
+      session = JWTSessions::Session.new(payload: user_payload, refresh_payload: user_payload)
       ctx[:session] = session.login
     end
   end

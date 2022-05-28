@@ -4,10 +4,11 @@ require 'swagger_helper'
 
 RSpec.describe Api::V1::LoginController, type: :request do
   let(:current_user) { User::Operation::Create.call(params: FactoryBot.attributes_for(:user))[:model] }
-  let(:token) {
-    Session::Operation::Login.call(params: { email: current_user.email, password: 'password' })[:session][:access]
-  }
-  let(:Authorization) { "Bearer #{token}" }
+  let(:tokens) do
+    Session::Operation::Login.call(params: { email: current_user.email, password: 'password' })[:session]
+  end
+  let(:Authorization) { "Bearer #{tokens[:access]}" }
+  let(:'X-Refresh-Token') { tokens[:refresh] }
 
   path '/api/v1/auth/login' do
     post 'User LogIn' do
@@ -29,6 +30,7 @@ RSpec.describe Api::V1::LoginController, type: :request do
     delete 'User LogOut' do
       tags 'Authentications'
       security [Bearer: {}]
+      parameter name: :'X-Refresh-Token', in: :header
 
       response '200', :ok do
         before do

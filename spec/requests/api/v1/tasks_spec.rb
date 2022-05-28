@@ -6,9 +6,9 @@ RSpec.describe Api::V1::TasksController, type: :request do
   let(:current_user) { User::Operation::Create.call(params: FactoryBot.attributes_for(:user))[:model] }
   let(:current_project) { FactoryBot.create(:project, user: current_user) }
   let(:current_task) { FactoryBot.create(:task, project: current_project) }
-  let(:token) {
+  let(:token) do
     Session::Operation::Login.call(params: { email: current_user.email, password: 'password' })[:session][:access]
-  }
+  end
   let(:Authorization) { "Bearer #{token}" }
 
   describe 'create' do
