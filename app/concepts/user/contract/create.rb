@@ -2,16 +2,26 @@
 
 module User::Contract
   class Create < Reform::Form
+    feature Dry
+
     property :email
     property :password
     property :password_confirmation, virtual: true
 
-    validates :email, presence: true, length: { in: 3..50 }, unique: true
-    validates :password, length: { is: 8 }, format: { with: /\w/ }
-    validate :password_confirm?
+    validation do
+      params do
+        required(:email).filled(size?: Constants::EMAIL_LENGTH)
+        required(:password).filled(size?: Constants::PASSWORD_LENGTH, format?: /^[a-zA-Z0-9]*$/)
+        required(:password_confirmation).filled
+      end
 
-    def password_confirm?
-      errors.add(:password, 'Password mismatch') if password != password_confirmation
+      rule(:password_confirmation, :password) do
+        key.failure(I18n.t('.password_mismatch')) if values[:password_confirmation] != values[:password]
+      end
+
+      rule(:email) do
+        key.failure(I18n.t('.non_uniq_email')) if User.where(email: value).present?
+      end
     end
   end
 end

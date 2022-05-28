@@ -1,9 +1,8 @@
 # frozen_string_literal: true
 
-require 'reform/form/active_model/validations'
-require 'reform/form/validation/unique_validator'
+require 'reform/form/dry'
 
 Reform::Form.class_eval do
-  include Reform::Form::ActiveModel::Validations
+  include Reform::Form::Dry
 end
-Rails.application.config.reform.validations = :active_model
+Rails.application.config.reform.validations = :dry
