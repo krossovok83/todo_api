@@ -10,7 +10,7 @@ module Comment::Operation
     fail :status
 
     def model!(ctx, current_user:, params:, **)
-      ctx[:model] = current_user.projects.find(params[:project_id]).tasks.find(params[:task_id]).comments.new
+      ctx[:model] = current_user.tasks.find(params[:task_id]).comments.new
     end
 
     def status(ctx, **)

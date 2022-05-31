@@ -6,7 +6,7 @@ module Task::Operation
     step Contract::Build(constant: Task::Contract::Create)
 
     def model!(ctx, current_user:, params:, **)
-      ctx[:model] = current_user.projects.find(params[:project_id]).tasks.find(params[:id])
+      ctx[:model] = current_user.tasks.find(params[:id])
     end
   end
 end

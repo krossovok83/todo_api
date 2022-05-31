@@ -9,7 +9,7 @@ Rails.application.routes.draw do
       post '/auth/login', to: 'login#create'
       post '/auth/refresh', to: 'refresh#create'
       delete '/auth/logout', to: 'login#destroy'
-      resources :projects do
+      resources :projects, shallow: true do
         resources :tasks, except: :index do
           resources :comments, only: %i[create destroy]
         end

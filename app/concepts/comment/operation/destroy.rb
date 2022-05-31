@@ -6,9 +6,7 @@ module Comment::Operation
     step :delete
 
     def model!(ctx, current_user:, params:, **)
-      ctx[:model] = current_user.projects.find(params[:project_id])
-                                .tasks.find(params[:task_id])
-                                .comments.find(params[:id])
+      ctx[:model] = current_user.comments.find(params[:id])
     end
 
     def delete(_ctx, model:, **)

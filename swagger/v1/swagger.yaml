@@ -11,7 +11,7 @@ paths:
       - Authentications
       parameters: []
       responses:
-        '200':
+        '201':
           description: ok
         '401':
           description: unauthorized
@@ -27,12 +27,15 @@ paths:
       - Authentications
       security:
       - Bearer: {}
+      parameters:
+      - name: X-Refresh-Token
+        in: header
       responses:
         '200':
           description: ok
         '401':
           description: unauthorized
-  "/api/v1/projects/{project_id}/tasks/{task_id}/comments":
+  "/api/v1/tasks/{task_id}/comments":
     post:
       summary: Create Comment
       tags:
@@ -40,9 +43,6 @@ paths:
       security:
       - Bearer: {}
       parameters:
-      - name: project_id
-        in: path
-        required: true
       - name: task_id
         in: path
         required: true
@@ -60,7 +60,7 @@ paths:
           application/json:
             schema:
               "$ref": "#/components/schemas/new_comment"
-  "/api/v1/projects/{project_id}/tasks/{task_id}/comments/{id}":
+  "/api/v1/comments/{id}":
     delete:
       summary: Destroy Comment
       tags:
@@ -68,12 +68,6 @@ paths:
       security:
       - Bearer: {}
       parameters:
-      - name: project_id
-        in: path
-        required: true
-      - name: task_id
-        in: path
-        required: true
       - name: id
         in: path
         required: true
@@ -205,7 +199,7 @@ paths:
           application/json:
             schema:
               "$ref": "#/components/schemas/new_task"
-  "/api/v1/projects/{project_id}/tasks/{id}":
+  "/api/v1/tasks/{id}":
     get:
       summary: Show Task
       tags:
@@ -213,9 +207,6 @@ paths:
       security:
       - Bearer: {}
       parameters:
-      - name: project_id
-        in: path
-        required: true
       - name: id
         in: path
         required: true
@@ -223,7 +214,7 @@ paths:
         '200':
           description: ok
         '404':
-          description: Not Found Task
+          description: Not Found
         '401':
           description: unauthorized
     put:
@@ -233,9 +224,6 @@ paths:
       security:
       - Bearer: {}
       parameters:
-      - name: project_id
-        in: path
-        required: true
       - name: id
         in: path
         required: true
@@ -245,7 +233,7 @@ paths:
         '422':
           description: Long Title
         '404':
-          description: Not Found Task
+          description: Not Found
         '401':
           description: unauthorized
       requestBody:
@@ -260,9 +248,6 @@ paths:
       security:
       - Bearer: {}
       parameters:
-      - name: project_id
-        in: path
-        required: true
       - name: id
         in: path
         required: true
@@ -270,7 +255,7 @@ paths:
         '200':
           description: ok
         '404':
-          description: Not Found Task
+          description: Not Found
         '401':
           description: unauthorized
   "/api/v1/users":

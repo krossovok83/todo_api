@@ -2,7 +2,7 @@
 
 require 'active_support/core_ext/integer/time'
 require 'shrine'
-require 'shrine/storage/file_system'
+require 'shrine/storage/s3'
 
 Rails.application.configure do
   # Settings specified here will take precedence over those in config/application.rb.
@@ -88,8 +88,8 @@ Rails.application.configure do
   # Do not dump schema after migrations.
   config.active_record.dump_schema_after_migration = false
 end
-
+s3_options = Rails.application.credentials.s3
 Shrine.storages = {
-  cache: Shrine::Storage::FileSystem.new('public', prefix: 'uploads/cache'),
-  store: Shrine::Storage::FileSystem.new('public', prefix: 'uploads')
+  cache: Shrine::Storage::S3.new(prefix: 'cache', **s3_options),
+  store: Shrine::Storage::S3.new(**s3_options)
 }

@@ -5,6 +5,7 @@ git_source(:github) { |repo| "https://github.com/#{repo}.git" }
 
 ruby '3.1.0'
 gem 'acts_as_list', '~> 1.0.4'
+gem 'aws-sdk-s3', '~> 1.114.0'
 gem 'bcrypt', '~> 3.1.17'
 gem 'bootsnap', require: false
 gem 'dry-validation', '~> 1.8.0'
