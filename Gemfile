@@ -9,6 +9,7 @@ gem 'aws-sdk-s3', '~> 1.114.0'
 gem 'bcrypt', '~> 3.1.17'
 gem 'bootsnap', require: false
 gem 'dry-validation', '~> 1.8.0'
+gem 'ffaker', '~> 2.21.0'
 gem 'jsonapi-serializer', '~> 2.2.0'
 gem 'jwt_sessions', '~> 2.7.2'
 gem 'pg', '~> 1.1'
@@ -16,15 +17,14 @@ gem 'puma', '~> 5.0'
 gem 'rack-cors', '~> 1.1.1'
 gem 'rails', '~> 7.0.2', '>= 7.0.2.3'
 gem 'reform-rails', '~> 0.2.3'
+gem 'rspec-rails'
 gem 'rswag', '~> 2.5.1'
 gem 'shrine', '~> 3.4.0'
 gem 'trailblazer-rails', '~> 2.4.0'
 gem 'tzinfo-data', platforms: %i[mingw mswin x64_mingw jruby]
 
 group :development, :test do
-  gem 'ffaker', '~> 2.21.0'
   gem 'pry', '~> 0.14.1'
-  gem 'rspec-rails'
 end
 
 group :test do
