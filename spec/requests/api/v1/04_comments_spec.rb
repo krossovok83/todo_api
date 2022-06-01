@@ -26,6 +26,13 @@ RSpec.describe Api::V1::CommentsController, type: :request do
           run_test!
         end
 
+        response '201', 'created with picture' do
+          let(:task_id) { current_task.id }
+          let(:file) { Rails.root.join('spec/fixtures/files/322f0c.png') }
+          let(:comment) { { image: file, task: current_task } }
+          run_test!
+        end
+
         response '422', 'Short Body' do
           let(:task_id) { current_task.id }
           let(:comment) { { body: 'f' } }

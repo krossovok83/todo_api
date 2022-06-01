@@ -1,7 +1,7 @@
 ---
 openapi: 3.0.1
 info:
-  title: API V1
+  title: ToDo API V1
   version: v1
 paths:
   "/api/v1/users":
@@ -244,7 +244,7 @@ paths:
         required: true
       responses:
         '201':
-          description: created
+          description: created with picture
         '422':
           description: Long Body
         '404':
@@ -275,7 +275,7 @@ paths:
         '401':
           description: unauthorized
 servers:
-- url: https://{defaultHost}
+- url: 'https://todo-api-korzhov.herokuapp.com '
   variables:
     defaultHost:
       default: todo-api-korzhov.herokuapp.com
@@ -397,7 +397,12 @@ components:
           type: text
           x-nullable: true
         image_data:
-          type: text
+          requestBody:
+            schema:
+              type: object
+              fileName:
+                type: string
+                format: binary
           x-nullable: true
         task:
           type: object

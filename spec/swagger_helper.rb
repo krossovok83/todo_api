@@ -18,13 +18,13 @@ RSpec.configure do |config|
     'v1/swagger.yaml' => {
       openapi: '3.0.1',
       info: {
-        title: 'API V1',
+        title: 'ToDo API V1',
         version: 'v1'
       },
       paths: {},
       servers: [
         {
-          url: 'https://{defaultHost}',
+          url: 'https://todo-api-korzhov.herokuapp.com ',
           variables: {
             defaultHost: {
               default: 'todo-api-korzhov.herokuapp.com'
@@ -125,7 +125,18 @@ RSpec.configure do |config|
             type: 'object',
             properties: {
               body: { type: 'text', 'x-nullable': true },
-              image_data: { type: 'text', 'x-nullable': true },
+              image_data: {
+                requestBody: {
+                  schema: {
+                    type: 'object',
+                    fileName: {
+                      type: 'string',
+                      format: 'binary'
+                    }
+                  }
+                },
+                'x-nullable': true
+              },
               task: {
                 type: 'object',
                 properties: {
