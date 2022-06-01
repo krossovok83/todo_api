@@ -4,6 +4,22 @@ info:
   title: API V1
   version: v1
 paths:
+  "/api/v1/users":
+    post:
+      summary: Create User
+      tags:
+      - Users
+      parameters: []
+      responses:
+        '201':
+          description: created
+        '422':
+          description: Not Unique Email
+      requestBody:
+        content:
+          application/json:
+            schema:
+              "$ref": "#/components/schemas/new_user"
   "/api/v1/auth/login":
     post:
       summary: User LogIn
@@ -33,49 +49,6 @@ paths:
       responses:
         '200':
           description: ok
-        '401':
-          description: unauthorized
-  "/api/v1/tasks/{task_id}/comments":
-    post:
-      summary: Create Comment
-      tags:
-      - Comments
-      security:
-      - Bearer: {}
-      parameters:
-      - name: task_id
-        in: path
-        required: true
-      responses:
-        '201':
-          description: created
-        '422':
-          description: Long Body
-        '404':
-          description: Not Found Task
-        '401':
-          description: unauthorized
-      requestBody:
-        content:
-          application/json:
-            schema:
-              "$ref": "#/components/schemas/new_comment"
-  "/api/v1/comments/{id}":
-    delete:
-      summary: Destroy Comment
-      tags:
-      - Comments
-      security:
-      - Bearer: {}
-      parameters:
-      - name: id
-        in: path
-        required: true
-      responses:
-        '200':
-          description: ok
-        '404':
-          description: Non Existing Comment
         '401':
           description: unauthorized
   "/api/v1/projects":
@@ -258,27 +231,54 @@ paths:
           description: Not Found
         '401':
           description: unauthorized
-  "/api/v1/users":
+  "/api/v1/tasks/{task_id}/comments":
     post:
-      summary: Create User
+      summary: Create Comment
       tags:
-      - Users
-      parameters: []
+      - Comments
+      security:
+      - Bearer: {}
+      parameters:
+      - name: task_id
+        in: path
+        required: true
       responses:
         '201':
           description: created
         '422':
-          description: Not Unique Email
+          description: Long Body
+        '404':
+          description: Not Found Task
+        '401':
+          description: unauthorized
       requestBody:
         content:
           application/json:
             schema:
-              "$ref": "#/components/schemas/new_user"
+              "$ref": "#/components/schemas/new_comment"
+  "/api/v1/comments/{id}":
+    delete:
+      summary: Destroy Comment
+      tags:
+      - Comments
+      security:
+      - Bearer: {}
+      parameters:
+      - name: id
+        in: path
+        required: true
+      responses:
+        '200':
+          description: ok
+        '404':
+          description: Non Existing Comment
+        '401':
+          description: unauthorized
 servers:
 - url: https://{defaultHost}
   variables:
     defaultHost:
-      default: www.example.com
+      default: todo-api-korzhov.herokuapp.com
 consumes:
 - application/json
 components:

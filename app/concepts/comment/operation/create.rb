@@ -17,11 +17,11 @@ module Comment::Operation
       ctx[:status] = ctx[:model].nil? ? :not_found : :unprocessable_entity
     end
 
-    def image_attach(ctx, **)
-      file = ctx[:params][:image]
+    def image_attach(_ctx, model:, params:, **)
+      file = params[:image]
       return true unless file
 
-      ctx[:model].image = File.open(file, binmode: true)
+      model.image = File.open(file, binmode: true)
     end
   end
 end
