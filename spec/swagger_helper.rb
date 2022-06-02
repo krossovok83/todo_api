@@ -46,15 +46,9 @@ RSpec.configure do |config|
           new_project: {
             type: 'object',
             properties: {
-              title: { type: 'string' },
-              user: {
-                type: 'object',
-                properties: {
-                  id: { type: 'integer' }
-                }
-              }
+              title: { type: 'string' }
             },
-            required: %w[title user]
+            required: %w[title]
           },
           user: {
             type: 'object',
@@ -85,42 +79,25 @@ RSpec.configure do |config|
           new_task: {
             type: 'object',
             properties: {
-              title: { type: 'string' },
-              deadline: { type: 'datetime', 'x-nullable': true },
-              position: { type: 'integer' },
-              completed: { type: 'boolean' },
-              project: {
-                type: 'object',
-                properties: {
-                  id: { type: 'integer' }
-                }
-              }
+              title: { type: 'string' }
             },
-            required: %w[title project]
+            required: %w[title]
           },
-          task: {
+          update_task: {
             type: 'object',
             properties: {
-              id: { type: 'integer' },
               title: { type: 'string' },
-              deadline: { type: 'datetime', 'x-nullable': true },
+              deadline: { type: 'string' },
               completed: { type: 'boolean' },
-              position_down: { type: 'boolean', 'x-nullable': true },
-              position_up: { type: 'boolean', 'x-nullable': true }
-            },
-            required: %w[id title project]
+              position_up: { type: 'boolean' },
+              position_down: { type: 'boolean' }
+            }
           },
           new_comment: {
             type: 'object',
             properties: {
-              body: { type: 'string', 'x-nullable': true },
-              image: { type: 'file', 'x-nullable': true },
-              task: {
-                type: 'object',
-                properties: {
-                  id: { type: 'integer' }
-                }
-              }
+              body: { type: 'string' },
+              image: { type: 'file' }
             }
           }
         },

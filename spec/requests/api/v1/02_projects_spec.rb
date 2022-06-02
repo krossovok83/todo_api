@@ -70,7 +70,7 @@ RSpec.describe Api::V1::ProjectsController do
       get 'Show Project' do
         tags 'Projects'
         security [Access: {}]
-        parameter name: :id, in: :path, schema: { '$ref' => '#/components/schemas/project' }
+        parameter name: :id, in: :path
 
         response '200', :ok do
           let(:id) { FactoryBot.create(:project, user: current_user).id }
@@ -97,7 +97,7 @@ RSpec.describe Api::V1::ProjectsController do
         tags 'Projects'
         security [Access: {}]
         parameter name: :id, in: :path, type: :integer
-        parameter name: :project, in: :body, schema: { '$ref' => '#/components/schemas/project' }
+        parameter name: :project, in: :body, schema: { '$ref' => '#/components/schemas/new_project' }
 
         response '200', :ok do
           let(:id) { FactoryBot.create(:project, user: current_user).id }

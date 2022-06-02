@@ -101,8 +101,6 @@ paths:
       parameters:
       - name: id
         in: path
-        schema:
-          "$ref": "#/components/schemas/project"
         required: true
       responses:
         '200':
@@ -136,10 +134,10 @@ paths:
         content:
           application/json:
             schema:
-              "$ref": "#/components/schemas/project"
+              "$ref": "#/components/schemas/new_project"
           multipart/form-data:
             schema:
-              "$ref": "#/components/schemas/project"
+              "$ref": "#/components/schemas/new_project"
     delete:
       summary: Destroy Project
       tags:
@@ -206,7 +204,7 @@ paths:
         '401':
           description: unauthorized
     put:
-      summary: Show Task
+      summary: Update Task
       tags:
       - Tasks
       security:
@@ -228,10 +226,10 @@ paths:
         content:
           application/json:
             schema:
-              "$ref": "#/components/schemas/task"
+              "$ref": "#/components/schemas/update_task"
           multipart/form-data:
             schema:
-              "$ref": "#/components/schemas/task"
+              "$ref": "#/components/schemas/update_task"
     delete:
       summary: Destroy Task
       tags:
@@ -321,14 +319,8 @@ components:
       properties:
         title:
           type: string
-        user:
-          type: object
-          properties:
-            id:
-              type: integer
       required:
       - title
-      - user
     user:
       type: object
       properties:
@@ -369,57 +361,28 @@ components:
       properties:
         title:
           type: string
-        deadline:
-          type: datetime
-          x-nullable: true
-        position:
-          type: integer
-        completed:
-          type: boolean
-        project:
-          type: object
-          properties:
-            id:
-              type: integer
       required:
       - title
-      - project
-    task:
+    update_task:
       type: object
       properties:
-        id:
-          type: integer
         title:
           type: string
         deadline:
-          type: datetime
-          x-nullable: true
+          type: string
         completed:
+          type: boolean
+        position_up:
           type: boolean
         position_down:
           type: boolean
-          x-nullable: true
-        position_up:
-          type: boolean
-          x-nullable: true
-      required:
-      - id
-      - title
-      - project
     new_comment:
       type: object
       properties:
         body:
           type: string
-          x-nullable: true
         image:
           type: file
-          x-nullable: true
-        task:
-          type: object
-          properties:
-            id:
-              type: integer
   securitySchemes:
     Access:
       type: apiKey

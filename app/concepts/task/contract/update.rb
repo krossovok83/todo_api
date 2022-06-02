@@ -11,8 +11,6 @@ module Task::Contract
     validation do
       params do
         required(:title).filled(size?: Constants::TASK_LENGTH)
-        optional(:deadline).maybe(:date_time?)
-        optional(:completed).maybe(:bool?)
       end
     end
   end

@@ -81,11 +81,11 @@ RSpec.describe Api::V1::TasksController, type: :request do
 
   describe 'update' do
     path '/api/v1/tasks/{id}' do
-      put 'Show Task' do
+      put 'Update Task' do
         tags 'Tasks'
         security [Access: {}]
         parameter name: :id, in: :path
-        parameter name: :task, in: :body, schema: { '$ref' => '#/components/schemas/task' }
+        parameter name: :task, in: :body, schema: { '$ref' => '#/components/schemas/update_task' }
 
         response '200', :ok do
           let(:id) { current_task.id }
