@@ -29,7 +29,7 @@ RSpec.describe Api::V1::LoginController, type: :request do
   path '/api/v1/auth/logout' do
     delete 'User LogOut' do
       tags 'Authentications'
-      security [Bearer: {}]
+      security [Access: {}]
       parameter name: :'X-Refresh-Token', in: :header
 
       response '200', :ok do

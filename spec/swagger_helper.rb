@@ -32,20 +32,14 @@ RSpec.configure do |config|
           }
         }
       ],
-      consumes: ['application/json'],
+      consumes: %w[application/json multipart/form-data],
       components: {
         schemas: {
           project: {
             type: 'object',
             properties: {
               id: { type: 'integer' },
-              title: { type: 'string' },
-              user: {
-                type: 'object',
-                properties: {
-                  id: { type: 'integer' }
-                }
-              }
+              title: { type: 'string' }
             },
             required: %w[id title user]
           },
@@ -110,33 +104,17 @@ RSpec.configure do |config|
               id: { type: 'integer' },
               title: { type: 'string' },
               deadline: { type: 'datetime', 'x-nullable': true },
-              position: { type: 'integer' },
               completed: { type: 'boolean' },
-              project: {
-                type: 'object',
-                properties: {
-                  id: { type: 'integer' }
-                }
-              }
+              position_down: { type: 'boolean', 'x-nullable': true },
+              position_up: { type: 'boolean', 'x-nullable': true }
             },
             required: %w[id title project]
           },
           new_comment: {
             type: 'object',
             properties: {
-              body: { type: 'text', 'x-nullable': true },
-              image_data: {
-                requestBody: {
-                  schema: {
-                    type: 'object',
-                    fileName: {
-                      type: 'string',
-                      format: 'binary'
-                    }
-                  }
-                },
-                'x-nullable': true
-              },
+              body: { type: 'string', 'x-nullable': true },
+              image: { type: 'file', 'x-nullable': true },
               task: {
                 type: 'object',
                 properties: {
@@ -147,10 +125,17 @@ RSpec.configure do |config|
           }
         },
         securitySchemes: {
-          Bearer: {
+          Access: {
             type: :apiKey,
             name: 'Authorization',
-            in: :header
+            in: :header,
+            description: 'Bearer <token>'
+          },
+          Refresh: {
+            type: :apiKey,
+            name: 'X-Refresh-Token',
+            in: :header,
+            description: '<token>'
           }
         }
       }

@@ -15,7 +15,7 @@ RSpec.describe Api::V1::TasksController, type: :request do
     path '/api/v1/projects/{project_id}/tasks' do
       post 'Create Task' do
         tags 'Tasks'
-        security [Bearer: {}]
+        security [Access: {}]
         parameter name: :project_id, in: :path
         parameter name: :task, in: :body, schema: { '$ref' => '#/components/schemas/new_task' }
 
@@ -57,7 +57,7 @@ RSpec.describe Api::V1::TasksController, type: :request do
     path '/api/v1/tasks/{id}' do
       get 'Show Task' do
         tags 'Tasks'
-        security [Bearer: {}]
+        security [Access: {}]
         parameter name: :id, in: :path
 
         response '200', :ok do
@@ -83,7 +83,7 @@ RSpec.describe Api::V1::TasksController, type: :request do
     path '/api/v1/tasks/{id}' do
       put 'Show Task' do
         tags 'Tasks'
-        security [Bearer: {}]
+        security [Access: {}]
         parameter name: :id, in: :path
         parameter name: :task, in: :body, schema: { '$ref' => '#/components/schemas/task' }
 
@@ -125,7 +125,7 @@ RSpec.describe Api::V1::TasksController, type: :request do
     path '/api/v1/tasks/{id}' do
       delete 'Destroy Task' do
         tags 'Tasks'
-        security [Bearer: {}]
+        security [Access: {}]
         parameter name: :id, in: :path
 
         response '200', :ok do

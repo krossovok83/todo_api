@@ -13,7 +13,7 @@ RSpec.describe Api::V1::ProjectsController do
     path '/api/v1/projects' do
       get 'GET Index Projects' do
         tags 'Projects'
-        security [Bearer: {}]
+        security [Access: {}]
         response '200', :ok do
           let(:Authorization) { "Bearer #{token}" }
           schema type: :object,
@@ -38,7 +38,7 @@ RSpec.describe Api::V1::ProjectsController do
     path '/api/v1/projects' do
       post 'Create Project' do
         tags 'Projects'
-        security [Bearer: {}]
+        security [Access: {}]
         parameter name: :project, in: :body, schema: { '$ref' => '#/components/schemas/new_project' }
 
         response '201', :created do
@@ -69,7 +69,7 @@ RSpec.describe Api::V1::ProjectsController do
     path '/api/v1/projects/{id}' do
       get 'Show Project' do
         tags 'Projects'
-        security [Bearer: {}]
+        security [Access: {}]
         parameter name: :id, in: :path, schema: { '$ref' => '#/components/schemas/project' }
 
         response '200', :ok do
@@ -95,7 +95,7 @@ RSpec.describe Api::V1::ProjectsController do
     path '/api/v1/projects/{id}' do
       put 'Update Project' do
         tags 'Projects'
-        security [Bearer: {}]
+        security [Access: {}]
         parameter name: :id, in: :path, type: :integer
         parameter name: :project, in: :body, schema: { '$ref' => '#/components/schemas/project' }
 
@@ -137,7 +137,7 @@ RSpec.describe Api::V1::ProjectsController do
     path '/api/v1/projects/{id}' do
       delete 'Destroy Project' do
         tags 'Projects'
-        security [Bearer: {}]
+        security [Access: {}]
         parameter name: :id, in: :path, type: :integer
 
         response '200', :ok do

@@ -20,6 +20,9 @@ paths:
           application/json:
             schema:
               "$ref": "#/components/schemas/new_user"
+          multipart/form-data:
+            schema:
+              "$ref": "#/components/schemas/new_user"
   "/api/v1/auth/login":
     post:
       summary: User LogIn
@@ -36,13 +39,16 @@ paths:
           application/json:
             schema:
               "$ref": "#/components/schemas/auth_user"
+          multipart/form-data:
+            schema:
+              "$ref": "#/components/schemas/auth_user"
   "/api/v1/auth/logout":
     delete:
       summary: User LogOut
       tags:
       - Authentications
       security:
-      - Bearer: {}
+      - Access: {}
       parameters:
       - name: X-Refresh-Token
         in: header
@@ -57,7 +63,7 @@ paths:
       tags:
       - Projects
       security:
-      - Bearer: {}
+      - Access: {}
       responses:
         '200':
           description: ok
@@ -68,7 +74,7 @@ paths:
       tags:
       - Projects
       security:
-      - Bearer: {}
+      - Access: {}
       parameters: []
       responses:
         '201':
@@ -82,13 +88,16 @@ paths:
           application/json:
             schema:
               "$ref": "#/components/schemas/new_project"
+          multipart/form-data:
+            schema:
+              "$ref": "#/components/schemas/new_project"
   "/api/v1/projects/{id}":
     get:
       summary: Show Project
       tags:
       - Projects
       security:
-      - Bearer: {}
+      - Access: {}
       parameters:
       - name: id
         in: path
@@ -107,7 +116,7 @@ paths:
       tags:
       - Projects
       security:
-      - Bearer: {}
+      - Access: {}
       parameters:
       - name: id
         in: path
@@ -128,12 +137,15 @@ paths:
           application/json:
             schema:
               "$ref": "#/components/schemas/project"
+          multipart/form-data:
+            schema:
+              "$ref": "#/components/schemas/project"
     delete:
       summary: Destroy Project
       tags:
       - Projects
       security:
-      - Bearer: {}
+      - Access: {}
       parameters:
       - name: id
         in: path
@@ -153,7 +165,7 @@ paths:
       tags:
       - Tasks
       security:
-      - Bearer: {}
+      - Access: {}
       parameters:
       - name: project_id
         in: path
@@ -172,13 +184,16 @@ paths:
           application/json:
             schema:
               "$ref": "#/components/schemas/new_task"
+          multipart/form-data:
+            schema:
+              "$ref": "#/components/schemas/new_task"
   "/api/v1/tasks/{id}":
     get:
       summary: Show Task
       tags:
       - Tasks
       security:
-      - Bearer: {}
+      - Access: {}
       parameters:
       - name: id
         in: path
@@ -195,7 +210,7 @@ paths:
       tags:
       - Tasks
       security:
-      - Bearer: {}
+      - Access: {}
       parameters:
       - name: id
         in: path
@@ -214,12 +229,15 @@ paths:
           application/json:
             schema:
               "$ref": "#/components/schemas/task"
+          multipart/form-data:
+            schema:
+              "$ref": "#/components/schemas/task"
     delete:
       summary: Destroy Task
       tags:
       - Tasks
       security:
-      - Bearer: {}
+      - Access: {}
       parameters:
       - name: id
         in: path
@@ -237,7 +255,7 @@ paths:
       tags:
       - Comments
       security:
-      - Bearer: {}
+      - Access: {}
       parameters:
       - name: task_id
         in: path
@@ -256,13 +274,16 @@ paths:
           application/json:
             schema:
               "$ref": "#/components/schemas/new_comment"
+          multipart/form-data:
+            schema:
+              "$ref": "#/components/schemas/new_comment"
   "/api/v1/comments/{id}":
     delete:
       summary: Destroy Comment
       tags:
       - Comments
       security:
-      - Bearer: {}
+      - Access: {}
       parameters:
       - name: id
         in: path
@@ -281,6 +302,7 @@ servers:
       default: todo-api-korzhov.herokuapp.com
 consumes:
 - application/json
+- multipart/form-data
 components:
   schemas:
     project:
@@ -290,11 +312,6 @@ components:
           type: integer
         title:
           type: string
-        user:
-          type: object
-          properties:
-            id:
-              type: integer
       required:
       - id
       - title
@@ -377,15 +394,14 @@ components:
         deadline:
           type: datetime
           x-nullable: true
-        position:
-          type: integer
         completed:
           type: boolean
-        project:
-          type: object
-          properties:
-            id:
-              type: integer
+        position_down:
+          type: boolean
+          x-nullable: true
+        position_up:
+          type: boolean
+          x-nullable: true
       required:
       - id
       - title
@@ -394,15 +410,10 @@ components:
       type: object
       properties:
         body:
-          type: text
+          type: string
           x-nullable: true
-        image_data:
-          requestBody:
-            schema:
-              type: object
-              fileName:
-                type: string
-                format: binary
+        image:
+          type: file
           x-nullable: true
         task:
           type: object
@@ -410,7 +421,13 @@ components:
             id:
               type: integer
   securitySchemes:
-    Bearer:
+    Access:
       type: apiKey
       name: Authorization
       in: header
+      description: Bearer <token>
+    Refresh:
+      type: apiKey
+      name: X-Refresh-Token
+      in: header
+      description: "<token>"
