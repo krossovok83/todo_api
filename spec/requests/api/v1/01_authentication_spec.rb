@@ -26,6 +26,26 @@ RSpec.describe Api::V1::LoginController, type: :request do
     end
   end
 
+  path '/api/v1/auth/refresh' do
+    post 'User LogIn Refresh' do
+      tags 'Authentications'
+      security [Refresh: {}]
+      parameter name: :'X-Refresh-Token', in: :header
+
+      response '200', :ok do
+        before do
+          post '/api/v1/auth/login', params: { email: current_user.email, password: current_user.password }
+        end
+        run_test!
+      end
+
+      response '401', :unauthorized do
+        let(:'X-Refresh-Token') { 'invalid' }
+        run_test!
+      end
+    end
+  end
+
   path '/api/v1/auth/logout' do
     delete 'User LogOut' do
       tags 'Authentications'

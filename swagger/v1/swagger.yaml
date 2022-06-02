@@ -42,6 +42,21 @@ paths:
           multipart/form-data:
             schema:
               "$ref": "#/components/schemas/auth_user"
+  "/api/v1/auth/refresh":
+    post:
+      summary: User LogIn Refresh
+      tags:
+      - Authentications
+      security:
+      - Refresh: {}
+      parameters:
+      - name: X-Refresh-Token
+        in: header
+      responses:
+        '200':
+          description: ok
+        '401':
+          description: unauthorized
   "/api/v1/auth/logout":
     delete:
       summary: User LogOut
