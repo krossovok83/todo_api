@@ -2,7 +2,7 @@
 
 module Project::Operation
   class Update < Trailblazer::Operation
-    step Subprocess(::Project::Operation::Show::FindModel)
+    step Subprocess(::Project::Lib::Find)
     step Contract::Build(constant: Project::Contract::Update)
     step Contract::Validate()
     step Contract::Persist()

@@ -2,7 +2,7 @@
 
 module Task::Operation
   class Destroy < Trailblazer::Operation
-    step Subprocess(::Task::Operation::Show)
+    step Subprocess(::Task::Lib::Find)
     step :delete
 
     def delete(_ctx, model:, **)
