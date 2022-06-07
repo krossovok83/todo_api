@@ -7,6 +7,7 @@ module Task::Operation
     step Contract::Validate()
     step Contract::Persist()
     step :position_change
+    step :status_ok
     fail :status
 
     def position_change(_ctx, model:, params:, **)
@@ -17,6 +18,10 @@ module Task::Operation
 
     def status(ctx, **)
       ctx[:status] = ctx[:model].nil? ? :not_found : :unprocessable_entity
+    end
+
+    def status_ok(ctx, **)
+      ctx[:status] = :ok
     end
   end
 end

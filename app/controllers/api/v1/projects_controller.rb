@@ -6,38 +6,37 @@ module Api
       before_action :authorize_access_request!
 
       def index
-        run Project::Operation::Index do
-          render json: ProjectSerializer.new(@model).serializable_hash.to_json
-        end
+        run Project::Operation::Index
+        render json: ProjectSerializer.new(@model).serializable_hash.to_json if result.success?
       end
 
       def create
-        run Project::Operation::Create do
-          render(json: ProjectSerializer.new(@model).serializable_hash.to_json, status: :created) and return
+        run Project::Operation::Create
+        if result.success?
+          render(json: ProjectSerializer.new(@model).serializable_hash.to_json, status: :created)
+        else
+          render json: { errors: @form.errors.full_messages }, status: :unprocessable_entity
         end
-        render json: { errors: @form.errors.full_messages }, status: :unprocessable_entity
       end
 
       def show
-        run Project::Operation::Show do
-          render json: ProjectSerializer.new(@model, { include: [:tasks] }).serializable_hash.to_json and return
+        run Project::Operation::Show
+        if result.success?
+          render json: ProjectSerializer.new(@model, { include: [:tasks] }).serializable_hash.to_json
+        else
+          head :not_found
         end
-        head :not_found
       end
 
       def update
-        run Project::Operation::Update do
-          return head :ok
-        end
+        run Project::Operation::Update
         render json: { errors: @form.errors.full_messages } if @form.present?
         head result[:status]
       end
 
       def destroy
-        run Project::Operation::Destroy do
-          return head :ok
-        end
-        head :not_found
+        run Project::Operation::Destroy
+        result.success? ? (head :ok) : (head :not_found)
       end
     end
   end

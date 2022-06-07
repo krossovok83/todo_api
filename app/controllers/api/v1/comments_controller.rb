@@ -6,19 +6,19 @@ module Api
       before_action :authorize_access_request!
 
       def create
-        run Comment::Operation::Create do
+        run Comment::Operation::Create
+        if result.success?
           model_json = TaskSerializer.new(@model.task, { include: [:comments] }).serializable_hash.to_json
-          render(json: model_json, status: :created) and return
+          render(json: model_json, status: :created)
+        else
+          render json: { errors: @form.errors.full_messages } if @form.present?
+          head result[:status]
         end
-        render json: { errors: @form.errors.full_messages } if @form.present?
-        head result[:status]
       end
 
       def destroy
-        run Comment::Operation::Destroy do
-          return head :ok
-        end
-        head :not_found
+        run Comment::Operation::Destroy
+        result.success? ? (head :ok) : (head :not_found)
       end
     end
   end
