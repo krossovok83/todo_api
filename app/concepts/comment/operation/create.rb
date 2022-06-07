@@ -21,7 +21,7 @@ module Comment::Operation
       file = params[:image]
       return true unless file
 
-      model.image = File.open(file, binmode: true)
+      model.pictures.new(image: File.open(file, binmode: true))
     end
   end
 end

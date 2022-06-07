@@ -6,7 +6,6 @@ module Comment::Contract
 
     property :task_id
     property :body
-    property :image_data
 
     validation do
       params do

@@ -2,5 +2,5 @@
 
 class Comment < ApplicationRecord
   belongs_to :task
-  include ImageUploader::Attachment(:image)
+  has_many :pictures
 end
