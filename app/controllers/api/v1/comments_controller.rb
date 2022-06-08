@@ -18,7 +18,7 @@ module Api
 
       def destroy
         run Comment::Operation::Destroy
-        result.success? ? (head :ok) : (head :not_found)
+        result.success? ? head(:ok) : head(:not_found)
       end
     end
   end

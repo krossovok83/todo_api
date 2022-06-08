@@ -17,7 +17,7 @@ module Api
 
       def destroy
         result = Session::Operation::Logout.call(params: { token: request.headers['X-Refresh-Token'] })
-        result.success? ? (head :ok) : (head :unauthorized)
+        result.success? ? head(:ok) : head(:unauthorized)
       end
     end
   end

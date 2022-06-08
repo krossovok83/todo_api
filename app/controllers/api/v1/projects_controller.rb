@@ -36,7 +36,7 @@ module Api
 
       def destroy
         run Project::Operation::Destroy
-        result.success? ? (head :ok) : (head :not_found)
+        result.success? ? head(:ok) : head(:not_found)
       end
     end
   end
