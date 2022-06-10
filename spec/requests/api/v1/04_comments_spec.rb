@@ -26,21 +26,7 @@ RSpec.describe Api::V1::CommentsController, type: :request do
           run_test!
         end
 
-        response '201', 'created with picture' do
-          # consumes 'multipart/form-data'
-          parameter name: :comment, in: :formData, attributes: {
-            schema: {
-              type: 'file'
-            }
-          }
-          let(:task_id) { current_task.id }
-          let(:file) { Rails.root.join('spec/fixtures/files/322f0c.png') }
-          let(:comment) { { image: file, task: current_task } }
-          run_test!
-        end
-
         response '422', 'Short Body' do
-          # consumes 'application/json'
           let(:task_id) { current_task.id }
           let(:comment) { { body: 'f' } }
           run_test!
@@ -62,6 +48,21 @@ RSpec.describe Api::V1::CommentsController, type: :request do
           let(:Authorization) { 'Bearer invalid' }
           let(:task_id) { current_task.id }
           let(:comment) { FactoryBot.attributes_for(:comment, task: current_task) }
+          run_test!
+        end
+      end
+
+      post 'Create Comment With Picture' do
+        tags 'Comments'
+        security [Access: {}]
+        consumes 'multipart/form-data'
+        parameter name: :task_id, in: :path
+        parameter name: :image, in: :formData, type: :file, required: true
+
+        response '201', 'create with picture' do
+          let(:task_id) { current_task.id }
+          let(:file) { Rails.root.join('spec/fixtures/files/322f0c.png') }
+          let(:image) { Rack::Test::UploadedFile.new(file, 'image/png') }
           run_test!
         end
       end

@@ -3,9 +3,9 @@
 module Comment::Operation
   class Create < Trailblazer::Operation
     step Rescue(ActiveRecord::RecordNotFound) { step :model! }
-    step :image_attach
     step Contract::Build(constant: Comment::Contract::Create)
     step Contract::Validate()
+    step :image_attach
     step Contract::Persist()
     fail :status
 
@@ -17,11 +17,11 @@ module Comment::Operation
       ctx[:status] = ctx[:model].nil? ? :not_found : :unprocessable_entity
     end
 
-    def image_attach(_ctx, model:, params:, **)
-      file = params[:image]
+    def image_attach(ctx, model:, **)
+      file = ctx['contract.default'].image
       return true unless file
 
-      model.pictures.new(image: File.open(file, binmode: true))
+      model.pictures.new(image: File.open(file))
     end
   end
 end
