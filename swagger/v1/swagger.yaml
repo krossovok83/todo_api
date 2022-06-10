@@ -1,0 +1,409 @@
+---
+openapi: 3.0.1
+info:
+  title: ToDo API V1
+  version: v1
+paths:
+  "/api/v1/users":
+    post:
+      summary: Create User
+      tags:
+      - Users
+      parameters: []
+      responses:
+        '201':
+          description: created
+        '422':
+          description: Not Unique Email
+      requestBody:
+        content:
+          application/json:
+            schema:
+              "$ref": "#/components/schemas/new_user"
+          multipart/form-data:
+            schema:
+              "$ref": "#/components/schemas/new_user"
+  "/api/v1/auth/login":
+    post:
+      summary: User LogIn
+      tags:
+      - Authentications
+      parameters: []
+      responses:
+        '201':
+          description: ok
+        '401':
+          description: unauthorized
+      requestBody:
+        content:
+          application/json:
+            schema:
+              "$ref": "#/components/schemas/auth_user"
+          multipart/form-data:
+            schema:
+              "$ref": "#/components/schemas/auth_user"
+  "/api/v1/auth/refresh":
+    post:
+      summary: User LogIn Refresh
+      tags:
+      - Authentications
+      security:
+      - Refresh: {}
+      parameters:
+      - name: X-Refresh-Token
+        in: header
+      responses:
+        '200':
+          description: ok
+        '401':
+          description: unauthorized
+  "/api/v1/auth/logout":
+    delete:
+      summary: User LogOut
+      tags:
+      - Authentications
+      security:
+      - Access: {}
+      parameters:
+      - name: X-Refresh-Token
+        in: header
+      responses:
+        '200':
+          description: ok
+        '401':
+          description: unauthorized
+  "/api/v1/projects":
+    get:
+      summary: GET Index Projects
+      tags:
+      - Projects
+      security:
+      - Access: {}
+      responses:
+        '200':
+          description: ok
+        '401':
+          description: unauthorized
+    post:
+      summary: Create Project
+      tags:
+      - Projects
+      security:
+      - Access: {}
+      parameters: []
+      responses:
+        '201':
+          description: created
+        '422':
+          description: Long Title
+        '401':
+          description: unauthorized
+      requestBody:
+        content:
+          application/json:
+            schema:
+              "$ref": "#/components/schemas/new_project"
+          multipart/form-data:
+            schema:
+              "$ref": "#/components/schemas/new_project"
+  "/api/v1/projects/{id}":
+    get:
+      summary: Show Project
+      tags:
+      - Projects
+      security:
+      - Access: {}
+      parameters:
+      - name: id
+        in: path
+        required: true
+      responses:
+        '200':
+          description: ok
+        '404':
+          description: Not Found Project
+        '401':
+          description: unauthorized
+    put:
+      summary: Update Project
+      tags:
+      - Projects
+      security:
+      - Access: {}
+      parameters:
+      - name: id
+        in: path
+        required: true
+        schema:
+          type: integer
+      responses:
+        '200':
+          description: ok
+        '404':
+          description: not_found
+        '422':
+          description: Short Title
+        '401':
+          description: unauthorized
+      requestBody:
+        content:
+          application/json:
+            schema:
+              "$ref": "#/components/schemas/new_project"
+          multipart/form-data:
+            schema:
+              "$ref": "#/components/schemas/new_project"
+    delete:
+      summary: Destroy Project
+      tags:
+      - Projects
+      security:
+      - Access: {}
+      parameters:
+      - name: id
+        in: path
+        required: true
+        schema:
+          type: integer
+      responses:
+        '200':
+          description: ok
+        '404':
+          description: not_found
+        '401':
+          description: unauthorized
+  "/api/v1/projects/{project_id}/tasks":
+    post:
+      summary: Create Task
+      tags:
+      - Tasks
+      security:
+      - Access: {}
+      parameters:
+      - name: project_id
+        in: path
+        required: true
+      responses:
+        '201':
+          description: created
+        '404':
+          description: Not Found Project
+        '422':
+          description: Long Task Title
+        '401':
+          description: unauthorized
+      requestBody:
+        content:
+          application/json:
+            schema:
+              "$ref": "#/components/schemas/new_task"
+          multipart/form-data:
+            schema:
+              "$ref": "#/components/schemas/new_task"
+  "/api/v1/tasks/{id}":
+    get:
+      summary: Show Task
+      tags:
+      - Tasks
+      security:
+      - Access: {}
+      parameters:
+      - name: id
+        in: path
+        required: true
+      responses:
+        '200':
+          description: ok
+        '404':
+          description: Not Found
+        '401':
+          description: unauthorized
+    put:
+      summary: Update Task
+      tags:
+      - Tasks
+      security:
+      - Access: {}
+      parameters:
+      - name: id
+        in: path
+        required: true
+      responses:
+        '200':
+          description: ok
+        '422':
+          description: Long Title
+        '404':
+          description: Not Found
+        '401':
+          description: unauthorized
+      requestBody:
+        content:
+          application/json:
+            schema:
+              "$ref": "#/components/schemas/update_task"
+          multipart/form-data:
+            schema:
+              "$ref": "#/components/schemas/update_task"
+    delete:
+      summary: Destroy Task
+      tags:
+      - Tasks
+      security:
+      - Access: {}
+      parameters:
+      - name: id
+        in: path
+        required: true
+      responses:
+        '200':
+          description: ok
+        '404':
+          description: Not Found
+        '401':
+          description: unauthorized
+  "/api/v1/tasks/{task_id}/comments":
+    post:
+      summary: Create Comment With Picture
+      tags:
+      - Comments
+      security:
+      - Access: {}
+      parameters:
+      - name: task_id
+        in: path
+        required: true
+      responses:
+        '201':
+          description: create with picture
+        '422':
+          description: Long Body
+        '404':
+          description: Not Found Task
+        '401':
+          description: unauthorized
+      requestBody:
+        content:
+          multipart/form-data:
+            schema:
+              type: file
+        required: true
+  "/api/v1/comments/{id}":
+    delete:
+      summary: Destroy Comment
+      tags:
+      - Comments
+      security:
+      - Access: {}
+      parameters:
+      - name: id
+        in: path
+        required: true
+      responses:
+        '200':
+          description: ok
+        '404':
+          description: Non Existing Comment
+        '401':
+          description: unauthorized
+servers:
+- url: 'https://todo-api-korzhov.herokuapp.com '
+  variables:
+    defaultHost:
+      default: todo-api-korzhov.herokuapp.com
+consumes:
+- application/json
+- multipart/form-data
+components:
+  schemas:
+    project:
+      type: object
+      properties:
+        id:
+          type: integer
+        title:
+          type: string
+      required:
+      - id
+      - title
+      - user
+    new_project:
+      type: object
+      properties:
+        title:
+          type: string
+      required:
+      - title
+    user:
+      type: object
+      properties:
+        id:
+          type: integer
+        email:
+          type: string
+        token:
+          type: string
+      required:
+      - id
+      - email
+    new_user:
+      type: object
+      properties:
+        email:
+          type: string
+        password:
+          type: string
+        password_confirmation:
+          type: string
+      required:
+      - email
+      - password
+      - password_confirmation
+    auth_user:
+      type: object
+      properties:
+        email:
+          type: string
+        password:
+          type: string
+      required:
+      - email
+      - password
+    new_task:
+      type: object
+      properties:
+        title:
+          type: string
+      required:
+      - title
+    update_task:
+      type: object
+      properties:
+        title:
+          type: string
+        deadline:
+          type: string
+        completed:
+          type: boolean
+        position_up:
+          type: boolean
+        position_down:
+          type: boolean
+    new_comment:
+      type: object
+      properties:
+        body:
+          type: string
+        image:
+          type: file
+  securitySchemes:
+    Access:
+      type: apiKey
+      name: Authorization
+      in: header
+      description: Bearer <token>
+    Refresh:
+      type: apiKey
+      name: X-Refresh-Token
+      in: header
+      description: "<token>"

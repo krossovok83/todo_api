@@ -7,6 +7,7 @@ AllCops:
     - 'bin/*'
     - 'db/schema.rb'
     - 'db/migrate/*'
+    - 'public/*'
 
 Style/Documentation:
   Enabled: false
@@ -40,3 +41,15 @@ Metrics/MethodLength:
 Lint/MissingSuper:
   Exclude:
     - 'app/services/**/*'
+Lint/UnreachableCode:
+  Exclude:
+    - 'app/concepts/**/operation/**/*'
+Style/SignalException:
+  Exclude:
+    - 'app/concepts/**/operation/**/*'
+Style/ClassAndModuleChildren:
+  Exclude:
+    - 'app/concepts/**/*'
+Lint/ShadowedArgument:
+  Exclude:
+    - 'app/lib/exceptions.rb'
